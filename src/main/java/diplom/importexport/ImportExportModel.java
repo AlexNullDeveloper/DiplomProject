@@ -1,12 +1,9 @@
 package diplom.importexport;
 
 import com.google.gson.Gson;
-import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -28,8 +25,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by a.talismanov on 03.06.2016.
@@ -58,8 +53,7 @@ public class ImportExportModel {
         }
 
 
-
-        ImportExportModel importExportModel =  new ImportExportModel();
+        ImportExportModel importExportModel = new ImportExportModel();
 
         initExportComponents(importExportModel);
 
@@ -72,18 +66,17 @@ public class ImportExportModel {
 //        System.out.println(importExportModel.dateWhen);
 
 
-        if (importExportModel.inFormat.equals("CSV")){
+        if (importExportModel.inFormat.equals("CSV")) {
             exportDataInCSV(importExportModel.tableFrom);
-        } else if (importExportModel.inFormat.equals("JSON")){
+        } else if (importExportModel.inFormat.equals("JSON")) {
             exportDataInJSON(importExportModel.tableFrom);
         } else if (importExportModel.inFormat.equals("XML")) {
             exportDataInXML(importExportModel.tableFrom);
         }
 
 
-
-        Integer exportID = importExportModel.addExport(importExportModel.tableFrom,importExportModel.inFormat,
-                "raz;dva;tri;", importExportModel.dateWhen,importExportModel.username);
+        Integer exportID = importExportModel.addExport(importExportModel.tableFrom, importExportModel.inFormat,
+                "raz;dva;tri;", importExportModel.dateWhen, importExportModel.username);
 
     }
 
@@ -91,23 +84,23 @@ public class ImportExportModel {
         System.out.println("exportDataInXML");
 
         Session session = factory.openSession();
-        try{
+        try {
             String hql = "FROM diplom.importexport.Trn";
             Query query = session.createQuery(hql);
 
-            List<Trn> results = (List<Trn>)query.list();
+            List<Trn> results = (List<Trn>) query.list();
             System.out.println("List to string " + results.toString());
-            final String exportPath ="C:\\inout\\export\\xml";
+            final String exportPath = "C:\\inout\\export\\xml";
             File exportImportDir = new File(exportPath);
-            if (!exportImportDir.exists()){
-                System.out.println("creating "+ exportPath);
+            if (!exportImportDir.exists()) {
+                System.out.println("creating " + exportPath);
 
                 boolean result = false;
 
-                try{
+                try {
                     exportImportDir.mkdirs();
                     result = true;
-                } catch (SecurityException e){
+                } catch (SecurityException e) {
                     e.printStackTrace();
                 }
 
@@ -134,9 +127,9 @@ public class ImportExportModel {
             BufferedWriter writer = null;
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(exportPath+"\\"+tableFrom+".xml"), "utf-8"));
+                        new FileOutputStream(exportPath + "\\" + tableFrom + ".xml"), "utf-8"));
                 Trns trns = new Trns();
-                for (Trn trn :  results){
+                for (Trn trn : results) {
                     String stringTransaction = "transaction";
                     Element elementTransaction = document.createElement(stringTransaction);
                     rootElement.appendChild(elementTransaction);
@@ -150,7 +143,7 @@ public class ImportExportModel {
                     String dognumStr = "dognum";
                     Element elementDocnum = document.createElement(dognumStr);
                     elementTransaction.appendChild(elementDocnum);
-                    elementDocnum.appendChild(document.createTextNode(((Integer)trn.getDognum()).toString()));
+                    elementDocnum.appendChild(document.createTextNode(((Integer) trn.getDognum()).toString()));
 
                     String dateSuccessStr = "dateSuccess";
                     Element elementDateSuccess = document.createElement(dateSuccessStr);
@@ -203,18 +196,17 @@ public class ImportExportModel {
                 }
 
 
-
                 System.out.println("before commit;");
             } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
                 try {
                     writer.close();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.getMessage();
                 }
             }
-        } catch (HibernateException e){
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
     }
@@ -223,31 +215,24 @@ public class ImportExportModel {
         Session session = factory.openSession();
 
 
-
-        try{
+        try {
             String hql = "FROM diplom.importexport.Trn";
-//            String hql = "FROM Trn";
-//            String sql = "SELECT * FROM TRN";
             Query query = session.createQuery(hql);
-//            SQLQuery query = session.createSQLQuery(sql);
-            //query.setParameter("table",tableFrom);
-            //query.setParameter("table","Trn");
 
-            List<Trn> results = (List<Trn>)query.list();
+            List<Trn> results = (List<Trn>) query.list();
             System.out.println("List to string " + results.toString());
 
-
-            final String exportPath ="C:\\inout\\export\\json";
+            final String exportPath = "C:\\inout\\export\\json";
             File exportImportDir = new File(exportPath);
-            if (!exportImportDir.exists()){
-                System.out.println("creating "+ exportPath);
+            if (!exportImportDir.exists()) {
+                System.out.println("creating " + exportPath);
 
                 boolean result = false;
 
-                try{
+                try {
                     exportImportDir.mkdirs();
                     result = true;
-                } catch (SecurityException e){
+                } catch (SecurityException e) {
                     e.printStackTrace();
                 }
 
@@ -260,56 +245,25 @@ public class ImportExportModel {
             BufferedWriter writer = null;
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(exportPath+"\\"+tableFrom+".json"), "utf-8"));
+                        new FileOutputStream(exportPath + "\\" + tableFrom + ".json"), "utf-8"));
                 Trns trns = new Trns();
-                for (Trn trn :  results){
+                for (Trn trn : results) {
                     // System.out.println("row " + object);
                     //gson.toJson(trn,writer);
                     trns.getListOfTrn().add(trn);
-
-
-//                   Trn trn = (Trn) object;
-//                   System.out.println(row.get("acc_deb"));
-//                   System.out.println(row.get("id"));
-//                   writer.append(((Integer) trn.getId()).toString());
-//                   writer.append(';');
-//                   writer.append(trn.getAccDeb());
-//                   writer.append(';');
-//
-//                   writer.flush();
-//                    writer.write(((BigInteger) trn.getId()).toString());
-//                    writer.append(';');
-//                    writer.write(((Integer) trn.getDognum()).toString());
-//                    writer.append(';');
-//                    writer.write(trn.getDateSuccess().toString());
-//                    writer.append(';');
-//                    writer.append(trn.getAccDeb());
-//                    writer.append(';');
-//                    writer.append(trn.getCurDeb());
-//                    writer.append(';');
-//                    writer.append(trn.getAccCred());
-//                    writer.append(';');
-//                    writer.append(trn.getCurCred());
-//                    writer.append(';');
-//                    writer.append(trn.getSumDeb().toString());
-//                    writer.append(';');
-//                    writer.append(trn.getSumCred().toString());
-//                    writer.append(';');
-//
-//                    writer.newLine();
                 }
-                gson.toJson(trns,writer);
+                gson.toJson(trns, writer);
                 System.out.println("before commit;");
             } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
                 try {
                     writer.close();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.getMessage();
                 }
             }
-        } catch (HibernateException e){
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
 
@@ -320,58 +274,37 @@ public class ImportExportModel {
         Session session = factory.openSession();
 
 
-
-        try{
+        try {
             String hql = "FROM diplom.importexport.Trn";
-//            String hql = "FROM Trn";
-//            String sql = "SELECT * FROM TRN";
             Query query = session.createQuery(hql);
-//            SQLQuery query = session.createSQLQuery(sql);
-            //query.setParameter("table",tableFrom);
-            //query.setParameter("table","Trn");
 
-            List<Trn> results = (List<Trn>)query.list();
+            List<Trn> results = (List<Trn>) query.list();
             System.out.println("List to string " + results.toString());
 
 
-            final String exportCSV ="C:\\inout\\export\\csv";
+            final String exportCSV = "C:\\inout\\export\\csv";
             File exportImportDir = new File(exportCSV);
-            if (!exportImportDir.exists()){
-                System.out.println("creating "+ exportCSV);
+            if (!exportImportDir.exists()) {
+                System.out.println("creating " + exportCSV);
 
                 boolean result = false;
 
-                try{
+                try {
                     exportImportDir.mkdirs();
                     result = true;
-                } catch (SecurityException e){
+                } catch (SecurityException e) {
                     e.printStackTrace();
                 }
-
                 if (result)
                     System.out.println("directory created");
-
             }
 
 
             BufferedWriter writer = null;
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(exportCSV+"\\"+tableFrom+".csv"), "utf-8"));
-                for (Trn trn :  results){
-                    // System.out.println("row " + object);
-
-
-
-//                   Trn trn = (Trn) object;
-//                   System.out.println(row.get("acc_deb"));
-//                   System.out.println(row.get("id"));
-//                   writer.append(((Integer) trn.getId()).toString());
-//                   writer.append(';');
-//                   writer.append(trn.getAccDeb());
-//                   writer.append(';');
-//
-//                   writer.flush();
+                        new FileOutputStream(exportCSV + "\\" + tableFrom + ".csv"), "utf-8"));
+                for (Trn trn : results) {
                     writer.write(((BigInteger) trn.getId()).toString());
                     writer.append(';');
                     writer.write(((Integer) trn.getDognum()).toString());
@@ -399,11 +332,11 @@ public class ImportExportModel {
             } finally {
                 try {
                     writer.close();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.getMessage();
                 }
             }
-        } catch (HibernateException e){
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
 
@@ -414,9 +347,9 @@ public class ImportExportModel {
         String sql = "SELECT SYSDATE FROM DUAL";
         SQLQuery query = session.createSQLQuery(sql);
 
-        List<Object> result = query.list();
+        List<Object> result = (List<Object>) query.list();
 
-        for (Object obj : result){
+        for (Object obj : result) {
             importExportModel.dateWhen = new Date(((Timestamp) obj).getTime());
         }
 
@@ -424,10 +357,10 @@ public class ImportExportModel {
 
     private void initExportComponents(ImportExportModel importExportModel) {
 
-        ToggleGroup group =  ImportExportFrame.getGroupInFormat();
+        ToggleGroup group = ImportExportFrame.getGroupInFormat();
 
         if (group.getSelectedToggle() != null) {
-            importExportModel.inFormat = ((RadioButton)group.
+            importExportModel.inFormat = ((RadioButton) group.
                     getSelectedToggle()).
                     getText();
         }
@@ -435,16 +368,6 @@ public class ImportExportModel {
         ComboBox<String> comboBox = ImportExportFrame.getFromTableComboBox();
 
         importExportModel.tableFrom = comboBox.getValue();
-
-        System.out.println("inside initExportComp");
-//        for (Node node : pane.getChildren()){
-//            for ((GridNode)node)
-//            System.out.println(node);
-//            if (node instanceof CheckBox){
-//                System.out.println(((CheckBox) node).getClass().getName());
-//            }
-//        }
-        // pane.getChildren().
     }
 
     private void getUserName() {
@@ -453,7 +376,7 @@ public class ImportExportModel {
         SQLQuery query = session.createSQLQuery(sql);
         java.util.List result = query.list();
 
-        for (Object object : result){
+        for (Object object : result) {
             username = (String) object;
         }
     }
@@ -463,7 +386,7 @@ public class ImportExportModel {
         Session session = factory.openSession();
         Transaction transaction = null;
         Integer exportID = null;
-        try{
+        try {
             transaction = session.beginTransaction();
             Export export = new Export();
             export.setTableFrom(tableFrom);
@@ -473,12 +396,16 @@ public class ImportExportModel {
             export.setExpUser(user);
             exportID = (Integer) session.save(export);
             transaction.commit();
-        } catch (HibernateException e){
+        } catch (HibernateException e) {
             if (transaction != null)
                 transaction.rollback();
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                session.close();
+            } catch (HibernateException e){
+                e.printStackTrace();
+            }
         }
         return exportID;
     }
