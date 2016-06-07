@@ -13,10 +13,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
@@ -65,24 +62,24 @@ public class ImportExportModel {
 //        System.out.println(importExportModel.inFormat);
 //        System.out.println(importExportModel.dateWhen);
 
-
+        String result = "invalid string";
         if (importExportModel.inFormat.equals("CSV")) {
-            exportDataInCSV(importExportModel.tableFrom);
+            result = exportDataInCSV(importExportModel.tableFrom);
         } else if (importExportModel.inFormat.equals("JSON")) {
-            exportDataInJSON(importExportModel.tableFrom);
+            result = exportDataInJSON(importExportModel.tableFrom);
         } else if (importExportModel.inFormat.equals("XML")) {
-            exportDataInXML(importExportModel.tableFrom);
+            result = exportDataInXML(importExportModel.tableFrom);
         }
 
+        System.out.println("result str = " + result);
 
         Integer exportID = importExportModel.addExport(importExportModel.tableFrom, importExportModel.inFormat,
-                "raz;dva;tri;", importExportModel.dateWhen, importExportModel.username);
+                result, importExportModel.dateWhen, importExportModel.username);
 
     }
 
-    private void exportDataInXML(String tableFrom) {
-        System.out.println("exportDataInXML");
-
+    private String exportDataInXML(String tableFrom) {
+        String resultXML = "invalid XML";
         Session session = factory.openSession();
         try {
             String hql = "FROM diplom.importexport.Trn";
@@ -106,7 +103,6 @@ public class ImportExportModel {
 
                 if (result)
                     System.out.println("directory created");
-
             }
 
             DocumentBuilderFactory documentBuilderFactory =
@@ -189,14 +185,14 @@ public class ImportExportModel {
                     DOMSource source = new DOMSource(document);
                     StreamResult result = new StreamResult(writer);
                     transformer.transform(source, result);
+
                 } catch (TransformerConfigurationException e) {
                     e.printStackTrace();
                 } catch (TransformerException e) {
                     e.printStackTrace();
                 }
-
-
-                System.out.println("before commit;");
+                nu.xom.Document xomDocument = nu.xom.converters.DOMConverter.convert(document);
+                resultXML = xomDocument.toXML();
             } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
@@ -209,10 +205,16 @@ public class ImportExportModel {
         } catch (HibernateException e) {
             e.printStackTrace();
         }
+        if (resultXML.isEmpty())
+            throw new RuntimeException("XML problem");
+
+        return resultXML;
     }
 
-    private void exportDataInJSON(String tableFrom) {
+    private String exportDataInJSON(String tableFrom) {
         Session session = factory.openSession();
+
+        String resultJson = "invalid json";
 
 
         try {
@@ -253,6 +255,7 @@ public class ImportExportModel {
                     trns.getListOfTrn().add(trn);
                 }
                 gson.toJson(trns, writer);
+                resultJson = gson.toJson(trns);
                 System.out.println("before commit;");
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -266,11 +269,12 @@ public class ImportExportModel {
         } catch (HibernateException e) {
             e.printStackTrace();
         }
-
+        return resultJson;
     }
 
-    private void exportDataInCSV(String tableFrom) {
+    private String exportDataInCSV(String tableFrom) {
         System.out.println("exportDataInCSV");
+        String resultCSV = "invalid CSV";
         Session session = factory.openSession();
 
 
@@ -301,6 +305,7 @@ public class ImportExportModel {
 
 
             BufferedWriter writer = null;
+            StringWriter sw = null;
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(exportCSV + "\\" + tableFrom + ".csv"), "utf-8"));
@@ -326,7 +331,34 @@ public class ImportExportModel {
 
                     writer.newLine();
                 }
-                System.out.println("before commit;");
+                sw = new StringWriter();
+                writer = new BufferedWriter(sw);
+                for (Trn trn : results) {
+                    writer.write(((BigInteger) trn.getId()).toString());
+                    writer.append(';');
+                    writer.write(((Integer) trn.getDognum()).toString());
+                    writer.append(';');
+                    writer.write(trn.getDateSuccess().toString());
+                    writer.append(';');
+                    writer.append(trn.getAccDeb());
+                    writer.append(';');
+                    writer.append(trn.getCurDeb());
+                    writer.append(';');
+                    writer.append(trn.getAccCred());
+                    writer.append(';');
+                    writer.append(trn.getCurCred());
+                    writer.append(';');
+                    writer.append(trn.getSumDeb().toString());
+                    writer.append(';');
+                    writer.append(trn.getSumCred().toString());
+                    writer.append(';');
+
+                    writer.newLine();
+                }
+                writer.flush();
+                StringBuffer sb = sw.getBuffer();
+                resultCSV = sb.toString();
+
             } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
@@ -339,7 +371,7 @@ public class ImportExportModel {
         } catch (HibernateException e) {
             e.printStackTrace();
         }
-
+        return resultCSV;
     }
 
     private void getSysdate(ImportExportModel importExportModel) {
@@ -403,7 +435,7 @@ public class ImportExportModel {
         } finally {
             try {
                 session.close();
-            } catch (HibernateException e){
+            } catch (HibernateException e) {
                 e.printStackTrace();
             }
         }

@@ -119,6 +119,13 @@
             <version>2.2.4</version>
         </dependency>
 
+        <!-- http://mvnrepository.com/artifact/com.io7m.xom/xom -->
+        <dependency>
+            <groupId>com.io7m.xom</groupId>
+            <artifactId>xom</artifactId>
+            <version>1.2.10</version>
+        </dependency>
+
 
     </dependencies>
 

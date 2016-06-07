@@ -147,7 +147,6 @@ public class Adress extends Application {
         }
     }
 
-
     public static void main(String[] args) {
         Adress.launch(Adress.class, args);
     }
