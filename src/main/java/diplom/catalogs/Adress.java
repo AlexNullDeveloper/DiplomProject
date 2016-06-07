@@ -66,10 +66,7 @@ public class Adress extends Application {
         fizAdrTextArea.setPrefWidth(375);
         GridPane.setHalignment(fizAdrTextArea, HPos.CENTER);
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainGrid.add(fizAdrLabel, 0, 0);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainGrid.add(fizAdrTextArea, 1, 0);
 
         Label jurAdrLabel = new Label("Юр. адрес");
@@ -83,10 +80,7 @@ public class Adress extends Application {
         jurAdrTextArea.setPrefWidth(300);
         GridPane.setHalignment(jurAdrTextArea, HPos.CENTER);
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainGrid.add(jurAdrLabel, 0, 1);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainGrid.add(jurAdrTextArea, 1, 1);
 
         Label pochtAdrLabel = new Label("Почт. адрес");
@@ -100,12 +94,8 @@ public class Adress extends Application {
         pochtAdrTextArea.setPrefWidth(300);
         GridPane.setHalignment(pochtAdrTextArea, HPos.CENTER);
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainGrid.add(pochtAdrLabel, 0, 2);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainGrid.add(pochtAdrTextArea, 1, 2);
-
 
         AdressModel adressModel = new AdressModel();
 
@@ -113,12 +103,7 @@ public class Adress extends Application {
         fillTextAreasWithData(adressJpa);
 
         HBox confirmOrExitPane = new HBox();
-//
-//        ColumnConstraints column1 = new ColumnConstraints();
-//        column1.setPercentWidth(50);
-//        ColumnConstraints column2 = new ColumnConstraints();
-//        column1.setPercentWidth(50);
-//        confirmOrExitPane.getColumnConstraints().addAll(column1,column2);
+
         confirmOrExitPane.setPadding(new Insets(3, 3, 3, 7));
 
 
@@ -132,11 +117,6 @@ public class Adress extends Application {
         confirmOrExitPane.setSpacing(330);
         confirmOrExitPane.getChildren().add(exitButton);
 
-//        HBox.setHgrow(exitButton, Priority.ALWAYS);
-//        HBox.setHgrow(saveButton, Priority.ALWAYS);
-//
-//        exitButton.setMaxWidth(Double.MAX_VALUE);
-//        saveButton.setMaxWidth(Double.MAX_VALUE);
         exitButton.setOnAction(ae -> primaryStage.hide());
         saveButton.setOnAction(e -> {
             if (!fizAdrTextArea.getText().equals(fizAdr) || !jurAdrTextArea.getText().equals(jurAdr)
@@ -146,13 +126,10 @@ public class Adress extends Application {
             primaryStage.close();
         });
 
-
-        // confirmOrExitPane.getChildren().addAll(saveButton,exitButton);
         rootPane.setCenter(mainGrid);
         rootPane.setBottom(confirmOrExitPane);
 
         root.getChildren().add(rootPane);
-        //root.getChildren().add(tableCatGrp);
         primaryStage.setScene(scene);
         primaryStage.show();
 
