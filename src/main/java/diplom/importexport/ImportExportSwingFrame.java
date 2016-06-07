@@ -38,6 +38,8 @@ public class ImportExportSwingFrame extends JFrame{
     private static ComboBox fromTableComboBox;
     private static Button exitButton;
 
+    private static JFXPanel dummyPanel;
+
     static ComboBox getFromTableComboBox() {
         return fromTableComboBox;
     }
@@ -64,6 +66,7 @@ public class ImportExportSwingFrame extends JFrame{
         leftPointX = (screen.width - APPLICATION_WIDTH) / 2;
         setBounds(leftPointX,topPointY,APPLICATION_WIDTH,APPLICATION_HEIGHT);
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        dummyPanel = new JFXPanel();
         setVisible(true);
 
         Platform.runLater(() -> initFX(fxPanel));

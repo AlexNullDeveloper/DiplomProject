@@ -52,13 +52,15 @@ public class MainFrame extends JFrame
     private int topPointY;
     private int leftPointX;
     private static String sysdate = null;
+    //static JFXPanel dummyJFXpanel;
 
     public MainFrame(String nameOfFrame, String nameOfDB)
     {
         super("Бухгалтерия talismanoffTM (Пользователь " + nameOfFrame + " ) База " + nameOfDB);
         //нельзя менять размер
         setResizable(false);
-
+        //нужно, чтобы FX оставался жив
+        //dummyJFXpanel = new JFXPanel();
         //this.connection = connection;
         this.connection = ConnectionSingleton.getInstance();
 
