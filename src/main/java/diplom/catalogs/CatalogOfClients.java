@@ -50,18 +50,19 @@ public class CatalogOfClients extends Application {
     private BigInteger adrressId;
     private Button editButton;
     private Button saveButton;
-    private Map<String, TextField> map;
+    //    private Map<String, TextField> map;
     private Button createButton;
+    private static ArrayList<String> listOfInitValues;
 
-    public static BigInteger getSelectedId() {
+    static BigInteger getSelectedId() {
         return selectedId;
     }
 
-    public boolean isEditMode() {
+    private boolean isEditMode() {
         return editMode;
     }
 
-    public void setEditMode(boolean editMode) {
+    private void setEditMode(boolean editMode) {
         this.editMode = editMode;
     }
 
@@ -104,8 +105,7 @@ public class CatalogOfClients extends Application {
         topFlowPane.getChildren().add(new Button("3"));
         topFlowPane.getChildren().add(new Button("4"));
         final String cssDefault = "-fx-border-color: grey;\n"
-                + "-fx-border-width: 1;\n"
-                ;
+                + "-fx-border-width: 1;\n";
 
         topFlowPane.setHgap(15);
         topFlowPane.setVgap(5);
@@ -126,7 +126,7 @@ public class CatalogOfClients extends Application {
                 new CategoryGroup(64, 1, "Вид клиента", "Клиент банка")
         );
 
-        TableView<CategoryGroup> tableCatGrp = new TableView<CategoryGroup>();
+        TableView<CategoryGroup> tableCatGrp = new TableView<>();
         tableCatGrp.setTableMenuButtonVisible(true);
         tableCatGrp.setTooltip(new Tooltip("Категории и группы клиента"));
         tableCatGrp.setPrefWidth(510);
@@ -146,14 +146,13 @@ public class CatalogOfClients extends Application {
         nameColGrpName.setCellValueFactory(new PropertyValueFactory<CategoryGroup, String>("groupName"));
         tableCatGrp.setItems(catGroup);
         tableCatGrp.getColumns().addAll(nameColCat, nameColGrp, nameColCatName, nameColGrpName);
-        //centralBorderPane.getChildren().add(tableCatGrp);
         centralBorderPane.setBottom(tableCatGrp);
 
 
         CatalogOfClientsModel catalogOfClientsModel = new CatalogOfClientsModel();
         catalogOfClientsModel.getCustomersFromDB();
 
-        TableView<Customer> tableOfNumsOfClients = new TableView<Customer>();
+        TableView<Customer> tableOfNumsOfClients = new TableView<>();
         tableOfNumsOfClients.setTableMenuButtonVisible(true);
         tableOfNumsOfClients.setTooltip(new Tooltip("Номер клиента"));
         tableOfNumsOfClients.setPrefWidth(150);
@@ -183,10 +182,10 @@ public class CatalogOfClients extends Application {
         tableOfNumsOfClients.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             //Check whether item is selected and set value of selected item to Label
             if (tableOfNumsOfClients.getSelectionModel().getSelectedItem() != null) {
-                System.out.println(newValue.getCusIdProp());
                 selectedId = BigInteger.valueOf(newValue.getCusIdProp());
                 Customer currentCustomer = catalogOfClientsModel.getCustomerDetailsFromDB(selectedId);
                 fillFieldWithCustomerData(currentCustomer);
+                setEditMode(false);
             }
         });
         selectedId = tableOfNumsOfClients.getSelectionModel().getSelectedItem().getCusId();
@@ -202,19 +201,17 @@ public class CatalogOfClients extends Application {
 
         //заполняем метками и полями
         makeLabelsAndTextField(mainContent);
-        initArrayListOfTextField();
 
 
         Customer currentCustomer = catalogOfClientsModel.getCustomerDetailsFromDB(selectedId);
         fillFieldWithCustomerData(currentCustomer);
-
+        initArrayListOfTextField();
 
         centralBorderPane.setCenter(mainContent);
 
         VBox panelOfButtons = new VBox();
         panelOfButtons.minWidth(50);
         panelOfButtons.minHeight(20);
-        //panelOfButtons.fillWi(100);
         panelOfButtons.setSpacing(10);
         panelOfButtons.setPadding(new Insets(5, 5, 5, 5));
 
@@ -251,9 +248,7 @@ public class CatalogOfClients extends Application {
         bottomFlowPane.setPadding(new Insets(3, 3, 3, 3));
         saveButton = new Button("Сохранить");
         bottomFlowPane.getChildren().add(saveButton);
-        saveButton.setOnAction(ae -> {
-            saveChangesIfMade();
-        });
+        saveButton.setOnAction(ae -> saveChangesIfMade());
         Button exitButton = new Button("Выход");
         exitButton.setOnAction(ae -> primaryStage.hide());
         bottomFlowPane.getChildren().add(exitButton);
@@ -274,13 +269,18 @@ public class CatalogOfClients extends Application {
     }
 
     private void saveChangesIfMade() {
-        boolean changed = false;
-        for (Map.Entry<String,TextField> entry : map.entrySet()){
-                System.out.println("key = " + entry.getKey());
-               if (!listOfTextField.contains(entry.getKey())){
-                   changed = true;
-               }
+        boolean changed = true;
+
+        ArrayList<String> listOfCurrentValues = new ArrayList<>();
+        for (TextField field : listOfTextField) {
+            listOfCurrentValues.add(field.getText());
         }
+
+        if (listOfCurrentValues.equals(listOfInitValues))
+            changed = false;
+
+        System.out.println("changed = " + changed);
+
         if (changed) {
             CatalogOfClientsModel catalogOfClientsModel = new CatalogOfClientsModel();
             catalogOfClientsModel.updateClientDetails(dateEditTextField.getText(), fullNameTextField.getText(),
@@ -294,7 +294,7 @@ public class CatalogOfClients extends Application {
     }
 
     private void initArrayListOfTextField() {
-        listOfTextField.add(dateEditTextField);
+
         listOfTextField.add(fullNameTextField);
         listOfTextField.add(engNameTextField);
         listOfTextField.add(shortNameTextField);
@@ -313,13 +313,10 @@ public class CatalogOfClients extends Application {
         listOfTextField.add(userEditTextField);
         listOfTextField.add(dateEditTextField);
 
-
-        map = new HashMap<String, TextField>();
         listOfTextField.forEach(item -> {
-                    item.setDisable(true);
-                    map.put(item.getText(), item);
-                }
-        );
+            item.setDisable(true);
+            listOfInitValues.add(item.getText());
+        });
     }
 
     /*
@@ -526,6 +523,12 @@ public class CatalogOfClients extends Application {
         if (currentCustomer.getUserRegDate() != null) {
             dateZavTextField.setText(currentCustomer.getUserRegDate().toString());
         }
+        listOfInitValues = new ArrayList<String>();
+        listOfTextField.forEach(item -> {
+            item.setDisable(true);
+            listOfInitValues.add(item.getText());
+        });
+
     }
 
     public static void main(String[] args) {
