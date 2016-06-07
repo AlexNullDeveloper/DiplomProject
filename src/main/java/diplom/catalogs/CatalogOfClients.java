@@ -51,6 +51,7 @@ public class CatalogOfClients extends Application {
     private Button editButton;
     private Button saveButton;
     private Map<String, TextField> map;
+    private Button createButton;
 
     public static BigInteger getSelectedId() {
         return selectedId;
@@ -84,14 +85,9 @@ public class CatalogOfClients extends Application {
 
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1024, 800);
-//        borderPane.setLayoutY(10);
-//        borderPane.setLayoutX(10);
-//        borderPane.setCursor(Cursor.TEXT);
-//        borderPane.setStyle("-fx-font: bold 14pt Arial; -fx-text-fill:#a0522d;");
-//        Label label1 = new Label("label");
-//        borderPane.setTop(label1);
         FlowPane topFlowPane = new FlowPane(10, 10);
-        topFlowPane.getChildren().add(new Button("1"));
+        createButton = new Button("Создать");
+        topFlowPane.getChildren().add(createButton);
         editButton = new Button("Редактировать");
         topFlowPane.getChildren().add(editButton);
 
@@ -108,12 +104,8 @@ public class CatalogOfClients extends Application {
         topFlowPane.getChildren().add(new Button("3"));
         topFlowPane.getChildren().add(new Button("4"));
         final String cssDefault = "-fx-border-color: grey;\n"
-                // + "-fx-border-insets: 5;\n"
                 + "-fx-border-width: 1;\n"
-                // + "-fx-border-style: dashed;\n"
                 ;
-
-        //topGridPane.setStyle("-fx-background-color: palegreen; -fx-padding: 2; -fx-hgap: 2; -fx-vgap: 2;");
 
         topFlowPane.setHgap(15);
         topFlowPane.setVgap(5);
@@ -177,7 +169,7 @@ public class CatalogOfClients extends Application {
         ArrayList<Customer> customerArrayList = new ArrayList<>();
         for (BigInteger itm : numsOfClients) {
             Customer tempCust = new Customer(itm);
-            customerArrayList.add(tempCust);//numsOfClients
+            customerArrayList.add(tempCust);
         }
 
         ObservableList<Customer> custObsList = FXCollections.observableArrayList(customerArrayList);
@@ -185,7 +177,6 @@ public class CatalogOfClients extends Application {
         tableOfNumsOfClients.setItems(custObsList);
 
         tableOfNumsOfClients.getColumns().add(clientIdColumn);
-//        tableOfNumsOfClients.requestFocus();
         tableOfNumsOfClients.getSelectionModel().select(0);
 
         //Add change listener
@@ -278,35 +269,17 @@ public class CatalogOfClients extends Application {
         });
 
         root.getChildren().add(borderPane);
-        //root.getChildren().add(tableCatGrp);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     private void saveChangesIfMade() {
         boolean changed = false;
-
-//        for (Iterator iterator = listOfTextField.iterator(); iterator.hasNext(); ) {
-//            TextField item = (TextField) iterator.next();
-//            String itemString = item.getText();
-//            System.out.print(itemString + "\t");
-//            TextField tempTextField = map.get(itemString);
-//
         for (Map.Entry<String,TextField> entry : map.entrySet()){
                 System.out.println("key = " + entry.getKey());
                if (!listOfTextField.contains(entry.getKey())){
                    changed = true;
                }
-            System.out.println(changed + "= changed");
-//            if (tempTextField != null) {
-//                String tempTextFieldString = tempTextField.getText();
-//                System.out.println(tempTextFieldString);
-//                if (!tempTextFieldString.
-//                        equals(item.getText())) {
-//                    changed = true;
-//                    break;
-//                }
-//            }
         }
         if (changed) {
             CatalogOfClientsModel catalogOfClientsModel = new CatalogOfClientsModel();
@@ -363,9 +336,7 @@ public class CatalogOfClients extends Application {
         fullNameTextField.setMinSize(550, fullNameTextField.getPrefHeight());
 
 
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(fullNameLabel, 0, 0);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(fullNameTextField, 1, 0);
 
         Label engNameLabel = new Label("Англ. наименование");
@@ -398,10 +369,7 @@ public class CatalogOfClients extends Application {
         ogrnTextField.setPrefSize(550, ogrnTextField.getPrefHeight());
         ogrnTextField.setMinSize(550, ogrnTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(ogrnLabel, 0, 3);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(ogrnTextField, 1, 3);
 
         Label regOrgLabel = new Label("Рег. организация");
@@ -412,184 +380,122 @@ public class CatalogOfClients extends Application {
         regOrgTextField.setPrefSize(550, regOrgTextField.getPrefHeight());
         regOrgTextField.setMinSize(550, regOrgTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(regOrgLabel, 0, 4);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(regOrgTextField, 1, 4);
 
 
         Label passportLabel = new Label("Паспорт");
 
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         passportTextField = new TextField();
         passportTextField.setPrefSize(200, passportTextField.getPrefHeight());
         passportTextField.setMinSize(200, passportTextField.getPrefHeight());
 
 
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(passportLabel, 0, 5);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(passportTextField, 1, 5);
 
 
         Label dateRegLabel = new Label("Дата рег.");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         dateRegTextField = new TextField();
         dateRegTextField.setPrefSize(200, dateRegTextField.getPrefHeight());
         dateRegTextField.setMinSize(200, dateRegTextField.getPrefHeight());
 
 
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(dateRegLabel, 0, 6);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(dateRegTextField, 1, 6);
 
 
         Label placeRegLabel = new Label("Место рег.");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
-
         placeRegTextField = new TextField();
         placeRegTextField.setPrefSize(200, placeRegTextField.getPrefHeight());
         placeRegTextField.setMinSize(200, placeRegTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(placeRegLabel, 0, 7);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(placeRegTextField, 1, 7);
 
 
         Label innLabel = new Label("ИНН");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
-
         innTextField = new TextField();
         innTextField.setPrefSize(200, innTextField.getPrefHeight());
         innTextField.setMinSize(200, innTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(innLabel, 0, 8);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(innTextField, 1, 8);
 
         Label kppLabel = new Label("КПП");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         kppTextField = new TextField();
         kppTextField.setPrefSize(200, kppTextField.getPrefHeight());
         kppTextField.setMinSize(200, kppTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(kppLabel, 0, 9);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(kppTextField, 1, 9);
 
         Label numSvidLabel = new Label("Номер свид-ва");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         numSvidTextField = new TextField();
         numSvidTextField.setPrefSize(200, numSvidTextField.getPrefHeight());
         numSvidTextField.setMinSize(200, numSvidTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(numSvidLabel, 0, 10);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(numSvidTextField, 1, 10);
 
         Label nalInspLabel = new Label("Налог. исп.");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         nalInspTextField = new TextField();
         nalInspTextField.setPrefSize(200, nalInspTextField.getPrefHeight());
         nalInspTextField.setMinSize(200, nalInspTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(nalInspLabel, 0, 11);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(nalInspTextField, 1, 11);
 
 
         Label emailLabel = new Label("E-mail");
 
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
-
         emailTextField = new TextField();
         emailTextField.setPrefSize(200, emailTextField.getPrefHeight());
         emailTextField.setMinSize(200, emailTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(emailLabel, 0, 12);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(emailTextField, 1, 12);
 
 
         Label userRegLabel = new Label("Польз. зарег.");
 
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
-
         userRegTextField = new TextField();
         userRegTextField.setPrefSize(200, userRegTextField.getPrefHeight());
         userRegTextField.setMinSize(200, userRegTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(userRegLabel, 0, 13);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(userRegTextField, 1, 13);
 
         Label dateZavLabel = new Label("Дата зав.");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         dateZavTextField = new TextField();
         dateZavTextField.setPrefSize(200, dateZavTextField.getPrefHeight());
         dateZavTextField.setMinSize(200, dateZavTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(dateZavLabel, 0, 14);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(dateZavTextField, 1, 14);
 
         Label userEditLabel = new Label("Польз-ль ред.");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         userEditTextField = new TextField();
         userEditTextField.setPrefSize(200, userEditTextField.getPrefHeight());
         userEditTextField.setMinSize(200, userEditTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(userEditLabel, 0, 15);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(userEditTextField, 1, 15);
 
         Label dateEditLabel = new Label("Дата ред.");
-
-        //passportLabel.setMinSize(passportLabel.getPrefWidth(),passportLabel.getPrefHeight());
 
         dateEditTextField = new TextField();
         dateEditTextField.setPrefSize(200, dateEditTextField.getPrefHeight());
         dateEditTextField.setMinSize(200, dateEditTextField.getPrefHeight());
 
-
-        //GridPane.setHalignment(fullNameLabel, HPos.LEFT);
         mainContent.add(dateEditLabel, 0, 16);
-        //GridPane.setHalignment(fullNameTextField, HPos.LEFT);
         mainContent.add(dateEditTextField, 1, 16);
     }
 

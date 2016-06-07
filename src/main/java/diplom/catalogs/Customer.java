@@ -19,20 +19,6 @@ public class Customer {
     @SequenceGenerator(name="my_seq", sequenceName = "CUS_SEQ",allocationSize = 1)
     private BigInteger cusId;
 
-
-
-//    public String getCusIdProp() {
-//        return cusIdProp.get();
-//    }
-//
-//    public SimpleStringProperty cusIdPropProperty() {
-//        return cusIdProp;
-//    }
-//
-//    public void setCusIdProp(String cusIdProp) {
-//        this.cusIdProp.set(cusIdProp);
-//    }
-
     public Customer(BigInteger bigInteger){
         this.cusId = bigInteger;
         String s = bigInteger + "";
@@ -80,9 +66,7 @@ public class Customer {
     }
 
     @Transient
-    private SimpleIntegerProperty cusIdProp; // = new SimpleIntegerProperty(this,"cusId");
-//    private SimpleStringProperty cusIdProp = new SimpleStringProperty(this,"cusIdProp");
-
+    private SimpleIntegerProperty cusIdProp;
 
     @Column(name = "cus_name")
     private String cusName;

@@ -26,7 +26,6 @@ public class CatalogOfClientsModel {
 
         CatalogOfClientsModel catalogOfClientsModel = new CatalogOfClientsModel();
         catalogOfClientsModel.populateCatalogOfClients();
-
     }
 
     private void populateCatalogOfClients() {
@@ -38,11 +37,6 @@ public class CatalogOfClientsModel {
         Query query = session.createQuery(hql);
 
         List<BigInteger> result = (List<BigInteger>) query.list();
-//        for(BigInteger itm : result){
-//            System.out.println(itm);
-//        }
-
-//        CatalogOfClients catalogOfClients =  new CatalogOfClients();
         ObservableList<BigInteger> ClientIds = FXCollections.observableList(result);
         CatalogOfClients.setNumsOfClients(ClientIds);
 
@@ -73,13 +67,6 @@ public class CatalogOfClientsModel {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-//            String hql = "UPDATE diplom.catalogs.Customer C SET C.userEditDate = :date_edit," +
-//                    "C.cusName = :full_name, C.cusEngName = :eng_name, C.cusShortName = :short_name," +
-//                    "C.cusOgrn = :ogrn, C.regOrg = :reg_org, C.passport = :passport, C.dateReg = :date_reg," +
-//                    "C.placeReg = :place_reg, C.cusInn = :inn, C.cusKpp = :kpp, C.numSvid = :num_svid, " +
-//                    "C.nalInspec = :nal_inspec, C.email = :e_mail, C.userReg = :user_reg," +
-//                    " C.userRegDate = :date_zav, C.userEdit = :user_edit" +
-//                    "WHERE C.cusId = :id";
 
             String hql = "UPDATE diplom.catalogs.Customer SET userEditDate = :date_edit, " +
                     "cusName = :full_name, cusEngName = :eng_name, cusShortName = :short_name, " +
@@ -149,9 +136,4 @@ public class CatalogOfClientsModel {
             session.close();
         }
     }
-
-//    private BigInteger getIntFromBigInteger(BigInteger selectedId) {
-//        BigInteger result = new BigInteger(selectedId + "");
-//        return result;
-//    }
 }
