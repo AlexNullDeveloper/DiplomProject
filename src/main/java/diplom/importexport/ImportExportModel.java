@@ -387,7 +387,7 @@ class ImportExportModel {
 
     private void initExportComponents(ImportExportModel importExportModel) {
 
-        ToggleGroup group = ImportExportFrame.getGroupInFormat();
+        ToggleGroup group = ImportExportSwingFrame.getGroupInFormat();
 
         if (group.getSelectedToggle() != null) {
             importExportModel.inFormat = ((RadioButton) group.
@@ -395,7 +395,7 @@ class ImportExportModel {
                     getText();
         }
 
-        ComboBox<String> comboBox = ImportExportFrame.getFromTableComboBox();
+        ComboBox<String> comboBox = ImportExportSwingFrame.getFromTableComboBox();
 
         importExportModel.tableFrom = comboBox.getValue();
     }

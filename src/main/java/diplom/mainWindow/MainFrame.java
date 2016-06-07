@@ -21,12 +21,16 @@ import diplom.importexport.ImportExportFrame;
 import diplom.administration.SettingsFrame;
 import diplom.catalogs.CatalogOfClients;
 import diplom.helpMenu.AboutFrame;
+import diplom.importexport.ImportExportSwingFrame;
 import diplom.registration.platDocument.RegPlatDocumentsInNationalCurrency;
 import diplom.headbook.presenter.ReestrDocumentsFrame;
 import diplom.moduleDate.ModuleDateFrame;
 import diplom.moduleDate.ModuleDateModel;
 import diplom.util.ConnectionSingleton;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.stage.Stage;
 
 /**
  * Основное меню приложения
@@ -116,7 +120,21 @@ public class MainFrame extends JFrame
 
     class ClientsCatalogListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            Application.launch(CatalogOfClients.class);
+            try {
+                Application.launch(CatalogOfClients.class);
+            } catch (IllegalStateException e2){
+                try{
+                    Platform.runLater(() -> {
+                        try {
+                            new CatalogOfClients().start(new Stage());
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                    });
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
     }
 
@@ -204,7 +222,7 @@ public class MainFrame extends JFrame
         JMenuItem importMenuItem = new JMenuItem("Импорт/Экспорт данных");
         importMenu.add(importMenuItem);
 
-        importMenuItem.addActionListener( ae -> {Application.launch(ImportExportFrame.class);});
+        importMenuItem.addActionListener( ae -> { new ImportExportSwingFrame("импорт/кспорт данных");});
 
         return importMenu;
     }
@@ -227,7 +245,6 @@ public class MainFrame extends JFrame
 
         JMenuItem setModuleDateItem =  new JMenuItem("Установить дату модуля");
         dateOfModuleMenu.add(setModuleDateItem);
-        //setModuleDateItem.addActionListener(new DateOfModuleListener());
         setModuleDateItem.addActionListener(ae -> {
             ModuleDateFrame moduleDateFrame = new ModuleDateFrame();
         });
