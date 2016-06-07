@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 
 /**
  * Created by a.talismanov on 02.06.2016.
+ * not using anymore cause of threading problem.
+ * Cant be used with Swing GUI from which its called
  */
 public class ImportExportFrame extends Application {
     private Stage primaryStage;

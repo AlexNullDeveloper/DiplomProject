@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by a.talismanov on 06.06.2016.
  */
-public class CatalogOfClientsModel {
+class CatalogOfClientsModel {
     private static SessionFactory factory;
 
     void getCustomersFromDB() {
@@ -37,12 +37,12 @@ public class CatalogOfClientsModel {
         Query query = session.createQuery(hql);
 
         List<BigInteger> result = (List<BigInteger>) query.list();
-        ObservableList<BigInteger> ClientIds = FXCollections.observableList(result);
-        CatalogOfClients.setNumsOfClients(ClientIds);
-
+        ObservableList<BigInteger> clientIds = FXCollections.observableList(result);
+        //CatalogOfClients.setNumsOfClients(clientIds);
+        CatalogOfClientsSwing.setNumsOfClients(clientIds);
     }
 
-    public Customer getCustomerDetailsFromDB(BigInteger selectedId) {
+    Customer getCustomerDetailsFromDB(BigInteger selectedId) {
         Session session = factory.openSession();
         String hql = "FROM diplom.catalogs.Customer C where C.cusId = :customer_id";
         Query query = session.createQuery(hql);
@@ -59,7 +59,7 @@ public class CatalogOfClientsModel {
         return resultCustomer;
     }
 
-    public void updateClientDetails(String editDate, String fullName, String engName, String shortName, String ogrn,
+    void updateClientDetails(String editDate, String fullName, String engName, String shortName, String ogrn,
                                     String regOrg, String passport, String dateReg, String placeReg, String inn,
                                     String kpp, String numSvid, String nalInsp, String email,
                                     String userReg, String dateZav, String userEdit) {

@@ -17,6 +17,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import diplom.catalogs.CatalogOfClientsSwing;
 import diplom.importexport.ImportExportFrame;
 import diplom.administration.SettingsFrame;
 import diplom.catalogs.CatalogOfClients;
@@ -92,7 +93,7 @@ public class MainFrame extends JFrame
     }
 
 
-    class ExitItemListener implements ActionListener{
+    private class ExitItemListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             if (connection != null){
                 //System.out.println("connection ne null tyt");
@@ -106,46 +107,46 @@ public class MainFrame extends JFrame
         }
     }
 
-    class AboutItemListener implements ActionListener{
+    private class AboutItemListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             AboutFrame aboutFrame = new AboutFrame("About");
         }
     }
 
-    class ReestrDocumentsListener implements ActionListener{
+    private class ReestrDocumentsListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             ReestrDocumentsFrame reestrDocumentsFrame = new ReestrDocumentsFrame("Реестр документопроводок", connection);
         }
     }
 
-    class ClientsCatalogListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
-            try {
-                Application.launch(CatalogOfClients.class);
-            } catch (IllegalStateException e2){
-                try{
-                    Platform.runLater(() -> {
-                        try {
-                            new CatalogOfClients().start(new Stage());
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
-                    });
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-    }
+//    class ClientsCatalogListener implements ActionListener{
+//        public void actionPerformed(ActionEvent e){
+//            try {
+//                Application.launch(CatalogOfClients.class);
+//            } catch (IllegalStateException e2){
+//                try{
+//                    Platform.runLater(() -> {
+//                        try {
+//                            new CatalogOfClients().start(new Stage());
+//                        } catch (Exception e1) {
+//                            e1.printStackTrace();
+//                        }
+//                    });
+//                } catch (Exception e1) {
+//                    e1.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
-    class PlatDocRegListener implements ActionListener{
+    private class PlatDocRegListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             RegPlatDocumentsInNationalCurrency regPlatDocumentsInNationalCurrency
                     = new RegPlatDocumentsInNationalCurrency("Регистрация платежных документов");
         }
     }
 
-    public JMenu initCatalogMenu(){
+    private JMenu initCatalogMenu(){
         JMenu catalogsMenu = new JMenu("Каталоги");//1
 
         //JMenuBar editJMenuBar = new JMenuBar();
@@ -155,7 +156,7 @@ public class MainFrame extends JFrame
 
         JMenuItem clientCatalogItem = new JMenuItem("Каталог клиентов");
         catalogsMenu.add(clientCatalogItem);
-        clientCatalogItem.addActionListener(new ClientsCatalogListener());
+        clientCatalogItem.addActionListener(ae -> new CatalogOfClientsSwing("Каталог клиентов"));
 
         JMenuItem versionItem = new JMenuItem("Версия АБС");
         catalogsMenu.add(versionItem);
@@ -168,7 +169,7 @@ public class MainFrame extends JFrame
         return catalogsMenu;
     }
 
-    public JMenu iniRegistrationMenu(){
+    private JMenu iniRegistrationMenu(){
         JMenu registrationMenu = new JMenu("Регистрация");
 
         JMenuItem cashDocumentsRegistration = new JMenuItem("Регистрация кассовых документов");
@@ -184,7 +185,7 @@ public class MainFrame extends JFrame
         return registrationMenu;
     }
 
-    public JMenu initHeadBookMenu(){
+    private JMenu initHeadBookMenu(){
         JMenu headBookMenu = new JMenu("Главная книга");
 
         JMenuItem documentsReestrItem = new JMenuItem("Реестр документов");
@@ -194,7 +195,7 @@ public class MainFrame extends JFrame
         return headBookMenu;
     }
 
-    public JMenu initHelpMenu(){
+    private JMenu initHelpMenu(){
         JMenu helpMenu = new JMenu("Help");
 
         JMenuItem aboutItem = new JMenuItem("About...");
@@ -206,7 +207,7 @@ public class MainFrame extends JFrame
     }
 
 
-    public void initComponents(JMenuBar menuBar){
+    private void initComponents(JMenuBar menuBar){
         menuBar.add(initCatalogMenu());
         menuBar.add(iniRegistrationMenu());
         menuBar.add(initHeadBookMenu());
@@ -222,7 +223,7 @@ public class MainFrame extends JFrame
         JMenuItem importMenuItem = new JMenuItem("Импорт/Экспорт данных");
         importMenu.add(importMenuItem);
 
-        importMenuItem.addActionListener( ae -> { new ImportExportSwingFrame("импорт/кспорт данных");});
+        importMenuItem.addActionListener( ae -> new ImportExportSwingFrame("импорт/кспорт данных"));
 
         return importMenu;
     }
@@ -234,7 +235,7 @@ public class MainFrame extends JFrame
         JMenuItem settingsItem = new JMenuItem("Настройки");
         administrationMenu.add(settingsItem);
 
-        settingsItem.addActionListener((ae) -> {new SettingsFrame("Настройки");});
+        settingsItem.addActionListener((ae) -> new SettingsFrame("Настройки"));
 
 
         return administrationMenu;
