@@ -26,12 +26,12 @@ public class ImportExportFrame extends Application {
 
     private static ComboBox fromTableComboBox;
 
-    public static ComboBox getFromTableComboBox() {
+    static ComboBox getFromTableComboBox() {
         return fromTableComboBox;
     }
 
 
-    public static ToggleGroup getGroupInFormat() {
+    static ToggleGroup getGroupInFormat() {
         return groupInFormat;
     }
 
@@ -184,7 +184,14 @@ public class ImportExportFrame extends Application {
 
         Button executeButton = new Button("Выполнить");
         GridPane.setConstraints(executeButton,0,0);
-        executeButton.setOnAction( ae -> new ImportExportModel().exportFromDB());
+        executeButton.setOnAction( ae -> {
+            if (buttonExport.isSelected()) {
+                new ImportExportModel().exportFromDB();
+            } else {
+                // сделать импорт
+                new ImportExportModel().importIntoDB();
+            }
+        });
 
         Button exitButton = new Button("Выход");
         GridPane.setConstraints(exitButton,1,0);
@@ -201,6 +208,8 @@ public class ImportExportFrame extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+
     public static void main(String... args){
         Application.launch(ImportExportFrame.class);
     }

@@ -26,7 +26,7 @@ import java.util.Locale;
 /**
  * Created by a.talismanov on 03.06.2016.
  */
-public class ImportExportModel {
+class ImportExportModel {
     private static SessionFactory factory;
     private String username;
     private String inFormat;
@@ -36,7 +36,7 @@ public class ImportExportModel {
 
     static Logger log = Logger.getLogger(ImportExportModel.class.getName());
 
-    public void exportFromDB() {
+    void exportFromDB() {
         Locale.setDefault(new Locale("en", "US"));
 
         try {
@@ -71,8 +71,6 @@ public class ImportExportModel {
             result = exportDataInXML(importExportModel.tableFrom);
         }
 
-        System.out.println("result str = " + result);
-
         Integer exportID = importExportModel.addExport(importExportModel.tableFrom, importExportModel.inFormat,
                 result, importExportModel.dateWhen, importExportModel.username);
 
@@ -90,7 +88,7 @@ public class ImportExportModel {
             final String exportPath = "C:\\inout\\export\\xml";
             File exportImportDir = new File(exportPath);
             if (!exportImportDir.exists()) {
-                System.out.println("creating " + exportPath);
+//                System.out.println("creating " + exportPath);
 
                 boolean result = false;
 
@@ -310,7 +308,7 @@ public class ImportExportModel {
                 writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(exportCSV + "\\" + tableFrom + ".csv"), "utf-8"));
                 for (Trn trn : results) {
-                    writer.write(((BigInteger) trn.getId()).toString());
+                    writer.write(( trn.getId()).toString());
                     writer.append(';');
                     writer.write(((Integer) trn.getDognum()).toString());
                     writer.append(';');
@@ -334,7 +332,7 @@ public class ImportExportModel {
                 sw = new StringWriter();
                 writer = new BufferedWriter(sw);
                 for (Trn trn : results) {
-                    writer.write(((BigInteger) trn.getId()).toString());
+                    writer.write(( trn.getId()).toString());
                     writer.append(';');
                     writer.write(((Integer) trn.getDognum()).toString());
                     writer.append(';');
@@ -440,5 +438,9 @@ public class ImportExportModel {
             }
         }
         return exportID;
+    }
+
+    void importIntoDB() {
+        System.out.println("import will be here");
     }
 }
