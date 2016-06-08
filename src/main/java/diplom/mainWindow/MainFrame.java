@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 import diplom.catalogs.CatalogOfClientsSwing;
+import diplom.catalogs.accounts.AccFrame;
 import diplom.catalogs.version.VersionFrame;
 import diplom.importexport.ImportExportFrame;
 import diplom.administration.SettingsFrame;
@@ -118,6 +119,7 @@ public class MainFrame extends JFrame
     private JMenu initCatalogMenu(){
         JMenu catalogsMenu = new JMenu("Каталоги");
         JMenuItem accCatalogItem = new JMenuItem("Каталог счетов");
+        accCatalogItem.addActionListener(ae -> new AccFrame("Счета клиентов"));
         catalogsMenu.add(accCatalogItem);
 
         JMenuItem clientCatalogItem = new JMenuItem("Каталог клиентов");

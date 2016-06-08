@@ -1,12 +1,15 @@
 package diplom.catalogs.accounts;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 
 /**
- * Created by a.talismanov on 08.06.2016.
+ * @author a.talismanov
+ * @version 1.0.0 08.06.2016.
  */
 @Entity
 @Table(name = "ACC")
@@ -36,6 +39,9 @@ public class Acc {
     private Date userEditDate;
     @Column(name = "CURRENT_OST")
     private BigDecimal currentOst;
+
+    @Transient
+    private SimpleIntegerProperty accIdProp;
 
     @Override
     public String toString() {
@@ -140,5 +146,17 @@ public class Acc {
 
     public void setCurrentOst(BigDecimal currentOst) {
         this.currentOst = currentOst;
+    }
+
+    public int getAccIdProp() {
+        return accIdProp.get();
+    }
+
+    public SimpleIntegerProperty accIdPropProperty() {
+        return accIdProp;
+    }
+
+    public void setAccIdProp(int accIdProp) {
+        this.accIdProp.set(accIdProp);
     }
 }
