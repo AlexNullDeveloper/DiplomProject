@@ -80,12 +80,11 @@ public class CatalogOfClientsSwing extends JFrame {
     private int topPointY;
     private int leftPointX;
 
-    static JFXPanel dummyJFXpanel;
-
+//    static JFXPanel dummyJFXpanel;
     public CatalogOfClientsSwing(String str){
         super(str);
         JFXPanel fxPanel = new JFXPanel();
-        dummyJFXpanel = new JFXPanel();
+//        dummyJFXpanel = new JFXPanel();
         add(fxPanel);
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -94,7 +93,8 @@ public class CatalogOfClientsSwing extends JFrame {
         setBounds(leftPointX,topPointY,APPLICATION_WIDTH,APPLICATION_HEIGHT);
 
         exitButton = new Button("Выход");
-        exitButton.setOnAction(ae -> this.dispose());
+//        exitButton.setOnAction(ae -> this.dispose());
+        exitButton.setOnAction(ae -> this.setVisible(false));
         Platform.runLater(() -> initFX(fxPanel));
         setVisible(true);
     }
