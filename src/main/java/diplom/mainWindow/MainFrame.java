@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 import diplom.catalogs.CatalogOfClientsSwing;
+import diplom.catalogs.version.VersionFrame;
 import diplom.importexport.ImportExportFrame;
 import diplom.administration.SettingsFrame;
 import diplom.catalogs.CatalogOfClients;
@@ -124,6 +125,7 @@ public class MainFrame extends JFrame
         clientCatalogItem.addActionListener(ae -> new CatalogOfClientsSwing("Каталог клиентов"));
 
         JMenuItem versionItem = new JMenuItem("Версия АБС");
+        versionItem.addActionListener( e -> new VersionFrame("Версия"));
         catalogsMenu.add(versionItem);
 
         JMenuItem exitItem  = new JMenuItem("Выход");
@@ -136,12 +138,12 @@ public class MainFrame extends JFrame
 
     private JMenu iniRegistrationMenu(){
         JMenu registrationMenu = new JMenu("Регистрация");
-
-        JMenuItem cashDocumentsRegistration = new JMenuItem("Регистрация кассовых документов");
-        registrationMenu.add(cashDocumentsRegistration);
-
-        JMenuItem memOrderRegistration = new JMenuItem("Регистрация мемориального ордера");
-        registrationMenu.add(memOrderRegistration);
+// до лучших времен
+//        JMenuItem cashDocumentsRegistration = new JMenuItem("Регистрация кассовых документов");
+//        registrationMenu.add(cashDocumentsRegistration);
+//
+//        JMenuItem memOrderRegistration = new JMenuItem("Регистрация мемориального ордера");
+//        registrationMenu.add(memOrderRegistration);
 
         JMenuItem PlatDocRegistration = new JMenuItem("Регистрация платежного документа");
         PlatDocRegistration.addActionListener(new PlatDocRegListener());
