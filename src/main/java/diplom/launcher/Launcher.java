@@ -1,8 +1,4 @@
 package diplom.launcher;
-
-/**
- * Created by a.talismanov on 28.04.2016.
- */
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,8 +32,8 @@ public class Launcher extends JFrame {
     private volatile static Launcher launcherInstance;
 
     private static Dimension componentSize;
-    public JTextField login;
-    public JPasswordField password;
+    private JTextField login;
+    private JPasswordField password;
     private static String usr;
     private JButton buttonLogIn;
     private static final int APPLICATION_WIDTH = 300;
@@ -67,7 +63,7 @@ public class Launcher extends JFrame {
 
     }
     /* метод для синглтона*/
-    public static Launcher getInstance(){
+    static Launcher getInstance(){
         if (launcherInstance == null){
             synchronized (Launcher.class){
                 if (launcherInstance == null){
@@ -78,7 +74,7 @@ public class Launcher extends JFrame {
         return launcherInstance;
     }
 
-    public void initComponents(Container pane){
+    private void initComponents(Container pane){
         //установка ярлыка логина
         JLabel labelLogin = new JLabel("Пользователь");
         componentSize = labelLogin.getPreferredSize();
@@ -118,13 +114,13 @@ public class Launcher extends JFrame {
 
     }
 
-    class ExitItemListener implements ActionListener{
+    private class ExitItemListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             System.exit(0);
         }
     }
 
-    class LogInItemListener implements ActionListener{
+    private class LogInItemListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             //connection k baze
             LauncherModel launcherModel =  new LauncherModel();
@@ -135,17 +131,15 @@ public class Launcher extends JFrame {
     }
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                Launcher puskach = Launcher.getInstance();
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            try {
+                //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            } catch (Exception e){
+                e.printStackTrace();
             }
+
+            Launcher puskach = Launcher.getInstance();
         });
     }
 }

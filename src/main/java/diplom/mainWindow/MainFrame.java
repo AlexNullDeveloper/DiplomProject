@@ -1,8 +1,5 @@
 package diplom.mainWindow;
 
-/**
- * Created by a.talismanov on 28.04.2016.
- */
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -10,12 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 import diplom.catalogs.CatalogOfClientsSwing;
 import diplom.importexport.ImportExportFrame;
@@ -52,16 +44,11 @@ public class MainFrame extends JFrame
     private int topPointY;
     private int leftPointX;
     private static String sysdate = null;
-    //static JFXPanel dummyJFXpanel;
 
     public MainFrame(String nameOfFrame, String nameOfDB)
     {
         super("Бухгалтерия talismanoffTM (Пользователь " + nameOfFrame + " ) База " + nameOfDB);
-        //нельзя менять размер
         setResizable(false);
-        //нужно, чтобы FX оставался жив
-        //dummyJFXpanel = new JFXPanel();
-        //this.connection = connection;
         this.connection = ConnectionSingleton.getInstance();
 
         JMenuBar mainMenuBar = new JMenuBar();
@@ -82,7 +69,7 @@ public class MainFrame extends JFrame
         topPointY = (screen.height - APPLICATION_HEIGHT) / 2;
         leftPointX = (screen.width - APPLICATION_WIDTH) / 2;
         setBounds(leftPointX,topPointY,APPLICATION_WIDTH,APPLICATION_HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
@@ -98,7 +85,6 @@ public class MainFrame extends JFrame
     private class ExitItemListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             if (connection != null){
-                //System.out.println("connection ne null tyt");
                 try{
                     connection.close();
                 } catch (SQLException SQLe){
@@ -121,26 +107,6 @@ public class MainFrame extends JFrame
         }
     }
 
-//    class ClientsCatalogListener implements ActionListener{
-//        public void actionPerformed(ActionEvent e){
-//            try {
-//                Application.launch(CatalogOfClients.class);
-//            } catch (IllegalStateException e2){
-//                try{
-//                    Platform.runLater(() -> {
-//                        try {
-//                            new CatalogOfClients().start(new Stage());
-//                        } catch (Exception e1) {
-//                            e1.printStackTrace();
-//                        }
-//                    });
-//                } catch (Exception e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
-//        }
-//    }
-
     private class PlatDocRegListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             RegPlatDocumentsInNationalCurrency regPlatDocumentsInNationalCurrency
@@ -149,10 +115,7 @@ public class MainFrame extends JFrame
     }
 
     private JMenu initCatalogMenu(){
-        JMenu catalogsMenu = new JMenu("Каталоги");//1
-
-        //JMenuBar editJMenuBar = new JMenuBar();
-
+        JMenu catalogsMenu = new JMenu("Каталоги");
         JMenuItem accCatalogItem = new JMenuItem("Каталог счетов");
         catalogsMenu.add(accCatalogItem);
 
@@ -214,9 +177,9 @@ public class MainFrame extends JFrame
         menuBar.add(iniRegistrationMenu());
         menuBar.add(initHeadBookMenu());
         menuBar.add(initDateOfModule());
-        menuBar.add(initHelpMenu());
         menuBar.add(initAdministationMenu());
         menuBar.add(initImportMenu());
+        menuBar.add(initHelpMenu());
     }
 
     private JMenu initImportMenu(){
@@ -231,15 +194,12 @@ public class MainFrame extends JFrame
     }
 
     private JMenu initAdministationMenu() {
-        // TODO Auto-generated method stub
         JMenu administrationMenu = new JMenu("Управление");
 
         JMenuItem settingsItem = new JMenuItem("Настройки");
         administrationMenu.add(settingsItem);
 
         settingsItem.addActionListener((ae) -> new SettingsFrame("Настройки"));
-
-
         return administrationMenu;
     }
 
@@ -256,17 +216,14 @@ public class MainFrame extends JFrame
     }
 
     public static void main(String[] args){
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run(){
-                try {
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                MainFrame mainFrame = new MainFrame("Бухгалтерия talismanoffTM","testBaza");
+            } catch (Exception e){
+                e.printStackTrace();
             }
+            MainFrame mainFrame = new MainFrame("Бухгалтерия talismanoffTM","testBaza");
         });
     }
 }
