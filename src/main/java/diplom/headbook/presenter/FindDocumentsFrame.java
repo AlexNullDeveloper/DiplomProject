@@ -41,7 +41,7 @@ public class FindDocumentsFrame extends JFrame{
     private ResultSet rs = null;
     private PreparedStatement prepStmt = null;
 
-    public FindDocumentsFrame(String nameOfFrame, Connection connect){
+    FindDocumentsFrame(String nameOfFrame, Connection connect){
         super(nameOfFrame);
         this.connection = connect;
 
@@ -49,17 +49,20 @@ public class FindDocumentsFrame extends JFrame{
         //Container pane = getContentPane();
         pane = (JPanel) getContentPane();
         //JPanel p = new JPanel();
-        pane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        //Insets insets = new Insets(5, 5, 5, 5);
-        pane.setLayout(new GridLayout(9,2,5,5));
-        initLabelsAndFields(pane);
+        initBorderLayoutFields();
         setBounds(500,250,400,100);
         getRootPane().setDefaultButton(buttonOK);
         pack();
         setVisible(true);
     }
 
-    public void initLabelsAndFields(Container pane){
+    private void initBorderLayoutFields() {
+        pane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        pane.setLayout(new GridLayout(9,2,5,5));
+        initLabelsAndFields(pane);
+    }
+
+    private void initLabelsAndFields(Container pane){
         pane.add(new JLabel("  Поиск по номеру документа"));
         fieldNumDog = new JTextField("");
         pane.add(fieldNumDog);
@@ -104,13 +107,13 @@ public class FindDocumentsFrame extends JFrame{
         //pane.setBorder(new EmptyBorder(30,30,30,30));
     }
 
-    class CancelItemListener implements ActionListener{
+    private class CancelItemListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             dispose();
         }
     }
 
-    class OKitemListener implements ActionListener{
+    private class OKitemListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             getDataWithWhereOption();
             //запрашивает селект и возвращаем табличку
@@ -118,7 +121,7 @@ public class FindDocumentsFrame extends JFrame{
         }
     }
 
-    public void getDataWithWhereOption(){
+    private void getDataWithWhereOption(){
         String selectDataTrnWithValueOfTextFieldsSQL = getFinalSqlString();
         try {
             prepStmt = connection.prepareStatement(selectDataTrnWithValueOfTextFieldsSQL,rs.TYPE_SCROLL_INSENSITIVE,rs.CONCUR_UPDATABLE);
@@ -147,7 +150,7 @@ public class FindDocumentsFrame extends JFrame{
 
     }
 
-    public String getFinalSqlString(){
+    private String getFinalSqlString(){
         String result = "SELECT DOGNUM, DATE_SUCCESS, ACC_DEB, CUR_DEB, ACC_CRED, CUR_CRED, SUM_DEB, SUM_CRED\n"
                 + " FROM TRN\n"
                 + " WHERE 1 = 1\n";
@@ -192,11 +195,21 @@ public class FindDocumentsFrame extends JFrame{
     }
 
     private String getDebCurrencyInISO (String str){
-        String result = null;
-        if (str.equals("810")) result = "RUR";
-        else if (str.equals("840")) result = "USD";
-        else if (str.equals("978")) result = "EUR";
-        else result = str;
+        String result;
+        switch (str) {
+            case "810":
+                result = "RUR";
+                break;
+            case "840":
+                result = "USD";
+                break;
+            case "978":
+                result = "EUR";
+                break;
+            default:
+                result = str;
+                break;
+        }
         return result;
     }
 
