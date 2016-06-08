@@ -1,6 +1,7 @@
 package diplom.catalogs.accounts;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,8 +17,8 @@ import java.sql.Date;
 public class Acc {
     @Id
     @Column(name = "ACC_ID")
-    @GeneratedValue(generator = "my_seq")
-    @SequenceGenerator(name = "my_seq", sequenceName = "ACC_SEQ", allocationSize = 1)
+//    @GeneratedValue(generator = "my_seq")
+//    @SequenceGenerator(name = "my_seq", sequenceName = "ACC_SEQ", allocationSize = 1)
     private String accId;
     @Column(name = "ACC_CUR")
     private String accCur;
@@ -41,7 +42,15 @@ public class Acc {
     private BigDecimal currentOst;
 
     @Transient
-    private SimpleIntegerProperty accIdProp;
+    private SimpleStringProperty accIdProp;
+
+    public Acc(String accId) {
+        this.accId = accId;
+//        setAccIdProp(accId);
+        this.accIdProp = new SimpleStringProperty(accId);
+    }
+
+    public Acc(){}
 
     @Override
     public String toString() {
@@ -148,15 +157,15 @@ public class Acc {
         this.currentOst = currentOst;
     }
 
-    public int getAccIdProp() {
+    public String getAccIdProp() {
         return accIdProp.get();
     }
 
-    public SimpleIntegerProperty accIdPropProperty() {
+    public SimpleStringProperty accIdPropProperty() {
         return accIdProp;
     }
 
-    public void setAccIdProp(int accIdProp) {
+    public void setAccIdProp(String accIdProp) {
         this.accIdProp.set(accIdProp);
     }
 }

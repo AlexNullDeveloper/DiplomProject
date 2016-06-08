@@ -1,7 +1,5 @@
 package diplom.catalogs.accounts;
 
-import diplom.catalogs.CatalogOfClientsSwing;
-import diplom.catalogs.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.hibernate.Query;
@@ -30,13 +28,17 @@ class AccModel {
 
     private void populateAccList() {
         Session session = factory.openSession();
-        String hql = "FROM diplom.catalogs.accounts.Acc";
+        String hql = "SELECT A.accId FROM diplom.catalogs.accounts.Acc A";
         Query query = session.createQuery(hql);
         List<String> accList = (List<String>) query.list();
 
         ObservableList<String> accIds = FXCollections.observableList(accList);
-        //CatalogOfClients.setNumsOfClients(clientIds);
         AccFrame.setAccIds(accIds);
 
+    }
+
+    static Acc getAccDetailsFromDB(BigInteger selectedId) {
+        //заглушка
+        return new Acc();
     }
 }

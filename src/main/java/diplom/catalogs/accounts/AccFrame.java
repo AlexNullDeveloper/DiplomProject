@@ -161,11 +161,11 @@ public class AccFrame extends JFrame {
         AccModel accModel = new AccModel();
         accModel.getAccountsFromDB();
 
-        TableView<Acc> tableOfNumsOfClients = new TableView<>();
-        tableOfNumsOfClients.setTableMenuButtonVisible(true);
-        tableOfNumsOfClients.setTooltip(new Tooltip("Номер счета"));
-        tableOfNumsOfClients.setPrefWidth(150);
-        tableOfNumsOfClients.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        TableView<Acc> tableOfAccIds = new TableView<>();
+        tableOfAccIds.setTableMenuButtonVisible(true);
+        tableOfAccIds.setTooltip(new Tooltip("Номер счета"));
+        tableOfAccIds.setPrefWidth(150);
+        tableOfAccIds.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         TableColumn accIdColumn = new TableColumn("№ счета.");
         accIdColumn.setCellValueFactory(new PropertyValueFactory<Acc, String>("accIdProp"));
@@ -174,21 +174,22 @@ public class AccFrame extends JFrame {
         accIdColumn.setResizable(false);
         accIdColumn.setSortable(true);
 
-//        ArrayList<Customer> customerArrayList = new ArrayList<>();
+        ArrayList<Acc> customerArrayList = new ArrayList<>();
         if (accIds == null){
             System.out.println("Sos numOfClients NULL");
         }
-//        for (BigInteger itm : accIds) {
-//            Customer tempCust = new Customer(itm);
-//            customerArrayList.add(tempCust);
-//        }
+        System.out.println(accIds);
+        for (String itm : accIds) {
+            Acc tempAcc = new Acc(itm);
+            customerArrayList.add(tempAcc);
+        }
 
-//        ObservableList<Customer> custObsList = FXCollections.observableArrayList(customerArrayList);
+        ObservableList<Acc> custObsList = FXCollections.observableArrayList(customerArrayList);
 
-//        tableOfNumsOfClients.setItems(custObsList);
+        tableOfAccIds.setItems(custObsList);
 
-//        tableOfNumsOfClients.getColumns().add(clientIdColumn);
-//        tableOfNumsOfClients.getSelectionModel().select(0);
+        tableOfAccIds.getColumns().add(accIdColumn);
+        tableOfAccIds.getSelectionModel().select(0);
 //
 //        //Add change listener
 //        tableOfNumsOfClients.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -203,7 +204,7 @@ public class AccFrame extends JFrame {
 //        selectedId = tableOfNumsOfClients.getSelectionModel().getSelectedItem().getCusId();
 
 
-        centralBorderPane.setLeft(tableOfNumsOfClients);
+        centralBorderPane.setLeft(tableOfAccIds);
 
 
         GridPane mainContent = new GridPane();
@@ -215,8 +216,8 @@ public class AccFrame extends JFrame {
         makeLabelsAndTextField(mainContent);
 
 
-//        Customer currentCustomer = catalogOfClientsModel.getCustomerDetailsFromDB(selectedId);
-//        fillFieldsWithAccData(currentCustomer);
+        Acc currentAcc = AccModel.getAccDetailsFromDB(selectedId);
+        fillFieldsWithAccData(currentAcc);
         initArrayListOfTextField();
 
         centralBorderPane.setCenter(mainContent);
@@ -293,6 +294,7 @@ public class AccFrame extends JFrame {
         listOfTextField.add(dateZavTextField);
         listOfTextField.add(userEditTextField);
         listOfTextField.add(dateEditTextField);
+        listOfTextField.add(currentOstTextField);
 
         listOfTextField.forEach(item -> {
             item.setDisable(true);
