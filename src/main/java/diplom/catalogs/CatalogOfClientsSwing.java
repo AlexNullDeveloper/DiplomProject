@@ -519,6 +519,8 @@ public class CatalogOfClientsSwing extends JFrame {
     private void fillFieldWithCustomerData(Customer currentCustomer) {
         if (currentCustomer.getUserEditDate() != null)
             dateEditTextField.setText(currentCustomer.getUserEditDate().toString());
+        else
+            dateEditTextField.setText("");
 
         fullNameTextField.setText(currentCustomer.getCusName());
         engNameTextField.setText(currentCustomer.getCusEngName());
@@ -529,6 +531,8 @@ public class CatalogOfClientsSwing extends JFrame {
 
         if (currentCustomer.getDateReg() != null)
             dateRegTextField.setText(currentCustomer.getDateReg().toString());
+        else
+            dateRegTextField.setText("");
 
         placeRegTextField.setText(currentCustomer.getPlaceReg());
         innTextField.setText(currentCustomer.getCusInn());
@@ -542,7 +546,9 @@ public class CatalogOfClientsSwing extends JFrame {
 
         if (currentCustomer.getUserRegDate() != null) {
             dateZavTextField.setText(currentCustomer.getUserRegDate().toString());
-        }
+        } else
+            dateZavTextField.setText("");
+
         listOfInitValues = new ArrayList<String>();
         listOfTextField.forEach(item -> {
             item.setDisable(true);

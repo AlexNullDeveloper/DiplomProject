@@ -444,39 +444,35 @@ public class AccFrame extends JFrame {
 
     private void fillFieldsWithAccData(Acc acc) {
 
-        if (acc.getNameOfOwner() != null) {
-            fullNameTextField.setText(acc.getNameOfOwner());
-        }
 
-        if (acc.getShortNameOfOwner() != null) {
-            shortNameTextField.setText(acc.getShortNameOfOwner());
-        }
+        fullNameTextField.setText(acc.getNameOfOwner());
+        shortNameTextField.setText(acc.getShortNameOfOwner());
+        engNameTextField.setText(acc.getEngNameOfOwner());
 
-        if (acc.getEngNameOfOwner() != null) {
-            engNameTextField.setText(acc.getEngNameOfOwner());
-        }
+        userRegTextField.setText(acc.getUserReg());
 
-        if (acc.getUserReg() != null) {
-            userRegTextField.setText(acc.getUserReg());
-        }
 
         if (acc.getUserRegDate() != null) {
             dateZavTextField.setText(acc.getUserRegDate().toString());
-        }
+        } else
+            dateZavTextField.setText("");
 
-        if (acc.getUserEdit() != null) {
-            userEditTextField.setText(acc.getUserEdit());
-        }
+        userEditTextField.setText(acc.getUserEdit());
 
         if (acc.getUserEditDate() != null) {
             dateEditTextField.setText(acc.getUserEditDate().toString());
-        }
+        } else
+            dateEditTextField.setText("");
 
         if (acc.getCurrentOst() != null)
             currentOstTextField.setText(acc.getCurrentOst().toString());
+        else
+            currentOstTextField.setText("");
 
         if (acc.getOtd() != null)
             otdTextField.setText(acc.getOtd().toString());
+        else
+            otdTextField.setText("");
 
         listOfInitValues = new ArrayList<String>();
         listOfTextField.forEach(item -> {
