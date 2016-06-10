@@ -1,7 +1,6 @@
 package diplom.catalogs.accounts;
 
 import diplom.catalogs.CategoryGroup;
-import diplom.catalogs.Customer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,17 +38,17 @@ public class AccFrame extends JFrame {
     private static TextField shortNameTextField;
     private static ArrayList<TextField> listOfTextField = new ArrayList<>();
     private final Button exitButton;
-    private static BigInteger selectedId;
+    private static String selectedId;
 
     private BigInteger adrressId;
     private Button editButton;
     private Button saveButton;
     private Button createButton;
     private static ArrayList<String> listOfInitValues;
-    private TextField otdTexField;
+    private TextField otdTextField;
     private TextField currentOstTextField;
 
-    static BigInteger getSelectedId() {
+    static String getSelectedId() {
         return selectedId;
     }
 
@@ -70,12 +69,16 @@ public class AccFrame extends JFrame {
     static void setAccIds(ObservableList<String> list) {
         accIds = list;
     }
+
     private static final int APPLICATION_HEIGHT = 840;
     private static final int APPLICATION_WIDTH = 1040;
     private int topPointY;
     private int leftPointX;
+    private static final String cssDefault = "-fx-border-color: grey;\n"
+            + "-fx-border-width: 1;\n";
 
-    public AccFrame(String str){
+
+    public AccFrame(String str) {
         super(str);
         JFXPanel fxPanel = new JFXPanel();
         add(fxPanel);
@@ -83,12 +86,26 @@ public class AccFrame extends JFrame {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         topPointY = (screen.height - APPLICATION_HEIGHT) / 2;
         leftPointX = (screen.width - APPLICATION_WIDTH) / 2;
-        setBounds(leftPointX,topPointY,APPLICATION_WIDTH,APPLICATION_HEIGHT);
+        setBounds(leftPointX, topPointY, APPLICATION_WIDTH, APPLICATION_HEIGHT);
 
         exitButton = new Button("Выход");
         exitButton.setOnAction(ae -> this.setVisible(false));
         Platform.runLater(() -> initFX(fxPanel));
-        setVisible(true);
+//        Thread thread = new Runnable(){
+//            @Override
+//            public void run(){
+//
+//            }
+//        };
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            SwingUtilities.invokeLater(() -> setVisible(true));
+        });
+        thread.start();
     }
 
     private void initFX(JFXPanel fxPanel) {
@@ -98,33 +115,108 @@ public class AccFrame extends JFrame {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1024, 800);
         FlowPane topFlowPane = new FlowPane(10, 10);
-        createButton = new Button("Создать");
-        topFlowPane.getChildren().add(createButton);
-        editButton = new Button("Редактировать");
-        topFlowPane.getChildren().add(editButton);
-
-        editButton.setOnAction(ae -> {
-            if (!isEditMode()) {
-                listOfTextField.forEach(item -> item.setDisable(false));
-                setEditMode(true);
-            } else {
-                listOfTextField.forEach(item -> item.setDisable(true));
-                setEditMode(false);
-            }
-        });
-
-        final String cssDefault = "-fx-border-color: grey;\n"
-                + "-fx-border-width: 1;\n";
-
-        topFlowPane.setHgap(15);
-        topFlowPane.setVgap(5);
-        topFlowPane.setPadding(new javafx.geometry.Insets(15));
-
-
-        topFlowPane.setStyle(cssDefault);
+        setTopFlowPane(topFlowPane);
         borderPane.setTop(topFlowPane);
 
         BorderPane centralBorderPane = new BorderPane();
+        TableView<CategoryGroup> tableCatGrp = initCenterBorderPane(borderPane, centralBorderPane);
+        centralBorderPane.setBottom(tableCatGrp);
+
+
+        AccModel accModel = new AccModel();
+        accModel.getAccountsFromDB();
+
+        TableView<Acc> tableOfAccIds = new TableView<>();
+        initTableOfAccIds(tableOfAccIds);
+
+
+        centralBorderPane.setLeft(tableOfAccIds);
+
+
+        GridPane mainContent = new GridPane();
+        initMainContent(mainContent);
+        centralBorderPane.setCenter(mainContent);
+
+        VBox panelOfButtons = new VBox();
+        initVboxOfButtons(panelOfButtons);
+        centralBorderPane.setRight(panelOfButtons);
+
+        FlowPane bottomFlowPane = new FlowPane(10, 10);
+        setBottomFlowPane(bottomFlowPane);
+        borderPane.setBottom(bottomFlowPane);
+        root.getChildren().add(borderPane);
+    }
+
+    private void initMainContent(GridPane mainContent) {
+        mainContent.setHgap(5);
+        mainContent.setVgap(5);
+        mainContent.setPadding(new javafx.geometry.Insets(15));
+
+        //заполняем метками и полями
+        makeLabelsAndTextField(mainContent);
+
+
+        Acc currentAcc = AccModel.getAccDetailsFromDB(selectedId);
+        fillFieldsWithAccData(currentAcc);
+        initArrayListOfTextField();
+    }
+
+    private void initTableOfAccIds(TableView<Acc> tableOfAccIds) {
+        tableOfAccIds.setTableMenuButtonVisible(true);
+        tableOfAccIds.setTooltip(new Tooltip("Номер счета"));
+        tableOfAccIds.setPrefWidth(150);
+        tableOfAccIds.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        TableColumn accIdColumn = new TableColumn("№ счета.");
+        accIdColumn.setCellValueFactory(new PropertyValueFactory<Acc, String>("accIdProp"));
+
+        accIdColumn.setPrefWidth(150);
+        accIdColumn.setResizable(false);
+        accIdColumn.setSortable(true);
+
+        ArrayList<Acc> customerArrayList = new ArrayList<>();
+        if (accIds == null) {
+            System.out.println("Sos numOfClients NULL");
+        }
+//        System.out.println(accIds);
+        for (String itm : accIds) {
+            Acc tempAcc = new Acc(itm);
+            customerArrayList.add(tempAcc);
+        }
+
+        ObservableList<Acc> custObsList = FXCollections.observableArrayList(customerArrayList);
+
+        tableOfAccIds.setItems(custObsList);
+
+        tableOfAccIds.getColumns().add(accIdColumn);
+        tableOfAccIds.getSelectionModel().select(0);
+
+        AccModel accModel = new AccModel();
+
+        tableOfAccIds.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (tableOfAccIds.getSelectionModel().getSelectedItem() != null) {
+                selectedId = String.valueOf(newValue.getAccIdProp());
+                Acc currentAcc = accModel.getAccDetailsFromDB(selectedId);
+                fillFieldsWithAccData(currentAcc);
+                setEditMode(false);
+            }
+        });
+        selectedId = tableOfAccIds.getSelectionModel().getSelectedItem().getAccId();
+
+//        //Add change listener
+//        tableOfNumsOfClients.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+//            //Check whether item is selected and set value of selected item to Label
+//            if (tableOfNumsOfClients.getSelectionModel().getSelectedItem() != null) {
+//                selectedId = BigInteger.valueOf(newValue.getCusIdProp());
+////                Customer currentCustomer = catalogOfClientsModel.getCustomerDetailsFromDB(selectedId);
+////                fillFieldsWithAccData(currentCustomer);
+//                setEditMode(false);
+//            }
+//        });
+//        selectedId = tableOfNumsOfClients.getSelectionModel().getSelectedItem().getCusId();
+    }
+
+    private TableView<CategoryGroup> initCenterBorderPane(BorderPane borderPane, BorderPane centralBorderPane) {
         borderPane.setCenter(centralBorderPane);
 
         ObservableList<CategoryGroup> catGroup = FXCollections.observableArrayList(
@@ -155,81 +247,38 @@ public class AccFrame extends JFrame {
         nameColGrpName.setCellValueFactory(new PropertyValueFactory<CategoryGroup, String>("groupName"));
         tableCatGrp.setItems(catGroup);
         tableCatGrp.getColumns().addAll(nameColCat, nameColGrp, nameColCatName, nameColGrpName);
-        centralBorderPane.setBottom(tableCatGrp);
+        return tableCatGrp;
+    }
 
 
-        AccModel accModel = new AccModel();
-        accModel.getAccountsFromDB();
+    private void setTopFlowPane(FlowPane topFlowPane) {
+        createButton = new Button("Создать");
+        topFlowPane.getChildren().add(createButton);
+        editButton = new Button("Редактировать");
+        topFlowPane.getChildren().add(editButton);
 
-        TableView<Acc> tableOfAccIds = new TableView<>();
-        tableOfAccIds.setTableMenuButtonVisible(true);
-        tableOfAccIds.setTooltip(new Tooltip("Номер счета"));
-        tableOfAccIds.setPrefWidth(150);
-        tableOfAccIds.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        editButton.setOnAction(ae -> {
+            if (!isEditMode()) {
+                listOfTextField.forEach(item -> item.setDisable(false));
+                setEditMode(true);
+            } else {
+                listOfTextField.forEach(item -> item.setDisable(true));
+                setEditMode(false);
+            }
+        });
+        topFlowPane.setHgap(15);
+        topFlowPane.setVgap(5);
+        topFlowPane.setPadding(new javafx.geometry.Insets(15));
+        topFlowPane.setStyle(cssDefault);
+    }
 
-        TableColumn accIdColumn = new TableColumn("№ счета.");
-        accIdColumn.setCellValueFactory(new PropertyValueFactory<Acc, String>("accIdProp"));
-
-        accIdColumn.setPrefWidth(150);
-        accIdColumn.setResizable(false);
-        accIdColumn.setSortable(true);
-
-        ArrayList<Acc> customerArrayList = new ArrayList<>();
-        if (accIds == null){
-            System.out.println("Sos numOfClients NULL");
-        }
-        System.out.println(accIds);
-        for (String itm : accIds) {
-            Acc tempAcc = new Acc(itm);
-            customerArrayList.add(tempAcc);
-        }
-
-        ObservableList<Acc> custObsList = FXCollections.observableArrayList(customerArrayList);
-
-        tableOfAccIds.setItems(custObsList);
-
-        tableOfAccIds.getColumns().add(accIdColumn);
-        tableOfAccIds.getSelectionModel().select(0);
-//
-//        //Add change listener
-//        tableOfNumsOfClients.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-//            //Check whether item is selected and set value of selected item to Label
-//            if (tableOfNumsOfClients.getSelectionModel().getSelectedItem() != null) {
-//                selectedId = BigInteger.valueOf(newValue.getCusIdProp());
-////                Customer currentCustomer = catalogOfClientsModel.getCustomerDetailsFromDB(selectedId);
-////                fillFieldsWithAccData(currentCustomer);
-//                setEditMode(false);
-//            }
-//        });
-//        selectedId = tableOfNumsOfClients.getSelectionModel().getSelectedItem().getCusId();
-
-
-        centralBorderPane.setLeft(tableOfAccIds);
-
-
-        GridPane mainContent = new GridPane();
-        mainContent.setHgap(5);
-        mainContent.setVgap(5);
-        mainContent.setPadding(new javafx.geometry.Insets(15));
-
-        //заполняем метками и полями
-        makeLabelsAndTextField(mainContent);
-
-
-        Acc currentAcc = AccModel.getAccDetailsFromDB(selectedId);
-        fillFieldsWithAccData(currentAcc);
-        initArrayListOfTextField();
-
-        centralBorderPane.setCenter(mainContent);
-
-        VBox panelOfButtons = new VBox();
+    private void initVboxOfButtons(VBox panelOfButtons) {
         panelOfButtons.minWidth(50);
         panelOfButtons.minHeight(20);
         panelOfButtons.setSpacing(10);
         panelOfButtons.setPadding(new javafx.geometry.Insets(5, 5, 5, 5));
 
         Button clientButton = new Button("Владелец счета");
-
         panelOfButtons.getChildren().addAll(clientButton);
 
         ObservableList<Node> listOfButtons = panelOfButtons.getChildren();
@@ -239,23 +288,16 @@ public class AccFrame extends JFrame {
                 ((Button) node).setMaxWidth(Double.MAX_VALUE);
             }
         }
-
-
         panelOfButtons.setStyle(cssDefault);
+    }
 
-        centralBorderPane.setRight(panelOfButtons);
-
-
-        FlowPane bottomFlowPane = new FlowPane(10, 10);
+    private void setBottomFlowPane(FlowPane bottomFlowPane) {
         bottomFlowPane.setPadding(new javafx.geometry.Insets(3, 3, 3, 3));
         saveButton = new Button("Сохранить");
         bottomFlowPane.getChildren().add(saveButton);
         saveButton.setOnAction(ae -> saveChangesIfMade());
         bottomFlowPane.getChildren().add(exitButton);
         bottomFlowPane.setAlignment(Pos.BASELINE_RIGHT);
-        borderPane.setBottom(bottomFlowPane);
-
-        root.getChildren().add(borderPane);
     }
 
 
@@ -273,6 +315,11 @@ public class AccFrame extends JFrame {
         System.out.println("changed = " + changed);
 
         if (changed) {
+            AccModel accModel = new AccModel();
+            accModel.updateAccDetails(fullNameTextField.getText(), engNameTextField.getText(), shortNameTextField.getText(),
+                    otdTextField.getText(), userRegTextField.getText(), dateZavTextField.getText(),
+                    userEditTextField.getText(), dateEditTextField.getText(), currentOstTextField.getText(), selectedId
+            );
 //            CatalogOfClientsModel catalogOfClientsModel = new CatalogOfClientsModel();
 //            catalogOfClientsModel.updateClientDetails(dateEditTextField.getText(), fullNameTextField.getText(),
 //                    engNameTextField.getText(), shortNameTextField.getText(), ogrnTextField.getText(),
@@ -289,7 +336,7 @@ public class AccFrame extends JFrame {
         listOfTextField.add(fullNameTextField);
         listOfTextField.add(engNameTextField);
         listOfTextField.add(shortNameTextField);
-        listOfTextField.add(otdTexField);
+        listOfTextField.add(otdTextField);
         listOfTextField.add(userRegTextField);
         listOfTextField.add(dateZavTextField);
         listOfTextField.add(userEditTextField);
@@ -341,12 +388,12 @@ public class AccFrame extends JFrame {
 
         otdLabel.setMinSize(otdLabel.getPrefWidth(), otdLabel.getPrefHeight());
 
-        otdTexField = new javafx.scene.control.TextField();
-        otdTexField.setPrefSize(550, otdTexField.getPrefHeight());
-        otdTexField.setMinSize(550, otdTexField.getPrefHeight());
+        otdTextField = new javafx.scene.control.TextField();
+        otdTextField.setPrefSize(550, otdTextField.getPrefHeight());
+        otdTextField.setMinSize(550, otdTextField.getPrefHeight());
 
         mainContent.add(otdLabel, 0, 3);
-        mainContent.add(otdTexField, 1, 3);
+        mainContent.add(otdTextField, 1, 3);
 
         javafx.scene.control.Label userRegLabel = new javafx.scene.control.Label("Польз. зарег.");
 
@@ -396,6 +443,40 @@ public class AccFrame extends JFrame {
     }
 
     private void fillFieldsWithAccData(Acc acc) {
+
+        if (acc.getNameOfOwner() != null) {
+            fullNameTextField.setText(acc.getNameOfOwner());
+        }
+
+        if (acc.getShortNameOfOwner() != null) {
+            shortNameTextField.setText(acc.getShortNameOfOwner());
+        }
+
+        if (acc.getEngNameOfOwner() != null) {
+            engNameTextField.setText(acc.getEngNameOfOwner());
+        }
+
+        if (acc.getUserReg() != null) {
+            userRegTextField.setText(acc.getUserReg());
+        }
+
+        if (acc.getUserRegDate() != null) {
+            dateZavTextField.setText(acc.getUserRegDate().toString());
+        }
+
+        if (acc.getUserEdit() != null) {
+            userEditTextField.setText(acc.getUserEdit());
+        }
+
+        if (acc.getUserEditDate() != null) {
+            dateEditTextField.setText(acc.getUserEditDate().toString());
+        }
+
+        if (acc.getCurrentOst() != null)
+            currentOstTextField.setText(acc.getCurrentOst().toString());
+
+        if (acc.getOtd() != null)
+            otdTextField.setText(acc.getOtd().toString());
 
         listOfInitValues = new ArrayList<String>();
         listOfTextField.forEach(item -> {
