@@ -12,6 +12,9 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -479,9 +482,6 @@ class ImportExportModel {
 
         Long importId = importExportModel.addImport(importExportModel.tableIn, importExportModel.outFormat,
                 result, importExportModel.dateWhen, importExportModel.username);
-
-
-        System.out.println("import will be here");
     }
 
     private Long addImport(String tableIn, String impFormat, String result, Date dateWhen, String username) {
@@ -515,6 +515,19 @@ class ImportExportModel {
 
     private String importDataInXML(String tableIn) {
         String result = "invlid XML";
+
+        try {
+            JAXBContext jc = JAXBContext.newInstance(Trns.class);
+            Unmarshaller u = jc.createUnmarshaller();
+            FileReader reader = new FileReader("C:\\inout\\import\\xml\\TRN.xml");
+            Trns transactions = (Trns) u.unmarshal(reader);
+            System.out.println(transactions);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
         //TODO: сделать импорт из XML
         return result;
     }

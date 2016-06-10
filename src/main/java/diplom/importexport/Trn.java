@@ -1,6 +1,9 @@
 package diplom.importexport;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -10,6 +13,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "TRN")
+@XmlRootElement(name = "transaction")
 public class Trn {
     public long getId() {
         return id;
@@ -23,6 +27,7 @@ public class Trn {
     @GeneratedValue(generator="my_seq")
     @SequenceGenerator(name="my_seq", sequenceName = "TRN_SEQ",allocationSize = 1)
     //private BigInteger id;
+//    @XmlID
     private long id;
     @Column(name = "dognum")
     private int dognum;
@@ -66,7 +71,7 @@ public class Trn {
     public BigDecimal getSumCred() {
         return sumCred;
     }
-
+    @XmlElement
     public void setSumCred(BigDecimal sumCred) {
         this.sumCred = sumCred;
     }
@@ -74,7 +79,7 @@ public class Trn {
     public BigDecimal getSumDeb() {
         return sumDeb;
     }
-
+    @XmlElement
     public void setSumDeb(BigDecimal sumDeb) {
         this.sumDeb = sumDeb;
     }
@@ -82,7 +87,7 @@ public class Trn {
     public String getCurCred() {
         return curCred;
     }
-
+    @XmlElement
     public void setCurCred(String curCred) {
         this.curCred = curCred;
     }
@@ -90,7 +95,7 @@ public class Trn {
     public String getAccCred() {
         return accCred;
     }
-
+    @XmlElement
     public void setAccCred(String accCred) {
         this.accCred = accCred;
     }
@@ -98,7 +103,7 @@ public class Trn {
     public String getCurDeb() {
         return curDeb;
     }
-
+    @XmlElement
     public void setCurDeb(String curDeb) {
         this.curDeb = curDeb;
     }
@@ -106,7 +111,7 @@ public class Trn {
     public String getAccDeb() {
         return accDeb;
     }
-
+    @XmlElement
     public void setAccDeb(String accDeb) {
         this.accDeb = accDeb;
     }
@@ -114,7 +119,7 @@ public class Trn {
     public Date getDateSuccess() {
         return dateSuccess;
     }
-
+    @XmlElement
     public void setDateSuccess(Date dateSuccess) {
         this.dateSuccess = dateSuccess;
     }
@@ -130,7 +135,7 @@ public class Trn {
     public int getDognum() {
         return dognum;
     }
-
+    @XmlElement
     public void setDognum(int dognum) {
         this.dognum = dognum;
     }

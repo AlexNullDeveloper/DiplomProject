@@ -1,9 +1,6 @@
 package diplom.importexport;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 
 /**
@@ -13,6 +10,10 @@ import java.util.ArrayList;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "transactions")
 public class Trns {
+
+    @XmlElement(name = "transaction")
+    private ArrayList<Trn> listOfTrn = new ArrayList<>();
+
     public ArrayList<Trn> getListOfTrn() {
         return listOfTrn;
     }
@@ -21,5 +22,12 @@ public class Trns {
         this.listOfTrn = listOfTrn;
     }
 
-    private ArrayList<Trn> listOfTrn = new ArrayList<>();
+
+
+    @Override
+    public String toString() {
+        return "Trns{" +
+                "listOfTrn=" + listOfTrn +
+                '}';
+    }
 }
