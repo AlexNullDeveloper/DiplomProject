@@ -1,6 +1,8 @@
 package diplom.importexport;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -33,8 +35,10 @@ class ImportExportModel {
     private String tableFrom;
     private Date dateWhen;
 
-
     static Logger log = Logger.getLogger(ImportExportModel.class.getName());
+
+    private String outFormat;
+    private String tableIn;
 
     void exportFromDB() {
         Locale.setDefault(new Locale("en", "US"));
@@ -132,7 +136,9 @@ class ImportExportModel {
                     String idStr = "id";
                     Element elementId = document.createElement(idStr);
                     elementTransaction.appendChild(elementId);
-                    elementId.appendChild(document.createTextNode(trn.getId().toString()));
+//                    elementId.appendChild(document.createTextNode(trn.getId().toString()));
+                    //long
+                    elementId.appendChild(document.createTextNode(String.valueOf(trn.getId())));
 
                     String dognumStr = "dognum";
                     Element elementDocnum = document.createElement(dognumStr);
@@ -238,7 +244,6 @@ class ImportExportModel {
 
                 if (result)
                     System.out.println("directory created");
-
             }
 
             Gson gson = new Gson();
@@ -248,8 +253,6 @@ class ImportExportModel {
                         new FileOutputStream(exportPath + "\\" + tableFrom + ".json"), "utf-8"));
                 Trns trns = new Trns();
                 for (Trn trn : results) {
-                    // System.out.println("row " + object);
-                    //gson.toJson(trn,writer);
                     trns.getListOfTrn().add(trn);
                 }
                 gson.toJson(trns, writer);
@@ -308,7 +311,8 @@ class ImportExportModel {
                 writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(exportCSV + "\\" + tableFrom + ".csv"), "utf-8"));
                 for (Trn trn : results) {
-                    writer.write(( trn.getId()).toString());
+//                    writer.write(( trn.getId()).toString());
+                    writer.write(String.valueOf(trn.getId()));
                     writer.append(';');
                     writer.write(((Integer) trn.getDognum()).toString());
                     writer.append(';');
@@ -332,7 +336,9 @@ class ImportExportModel {
                 sw = new StringWriter();
                 writer = new BufferedWriter(sw);
                 for (Trn trn : results) {
-                    writer.write(( trn.getId()).toString());
+//                    writer.write(( trn.getId()).toString());
+                    //for long
+                    writer.write(String.valueOf((trn.getId())));
                     writer.append(';');
                     writer.write(((Integer) trn.getDognum()).toString());
                     writer.append(';');
@@ -382,7 +388,6 @@ class ImportExportModel {
         for (Object obj : result) {
             importExportModel.dateWhen = new Date(((Timestamp) obj).getTime());
         }
-
     }
 
     private void initExportComponents(ImportExportModel importExportModel) {
@@ -441,6 +446,145 @@ class ImportExportModel {
     }
 
     void importIntoDB() {
+
+        Locale.setDefault(new Locale("en", "US"));
+
+        try {
+            factory = new AnnotationConfiguration().
+                    configure().
+                    addPackage("importexport").
+                    addAnnotatedClass(Export.class).
+                    buildSessionFactory();
+        } catch (Throwable th) {
+            System.err.println("Не получилось создать sessionFactory object" + th);
+        }
+
+
+        ImportExportModel importExportModel = new ImportExportModel();
+
+        initImportComponents(importExportModel);
+        getSysdate(importExportModel);
+
+        importExportModel.getUserName();
+
+        String result = "invalid string";
+
+        if (importExportModel.outFormat.equals("CSV")) {
+            result = importDataInCSV(importExportModel.tableIn);
+        } else if (importExportModel.outFormat.equals("JSON")) {
+            result = importDataInJSON(importExportModel.tableIn);
+        } else if (importExportModel.outFormat.equals("XML")) {
+            result = importDataInXML(importExportModel.tableIn);
+        }
+
+        Long importId = importExportModel.addImport(importExportModel.tableIn, importExportModel.outFormat,
+                result, importExportModel.dateWhen, importExportModel.username);
+
+
         System.out.println("import will be here");
+    }
+
+    private Long addImport(String tableIn, String impFormat, String result, Date dateWhen, String username) {
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        Long importID = null;
+        try {
+            transaction = session.beginTransaction();
+            Import anImport = new Import();
+            anImport.setTableTo(tableIn);
+            anImport.setImpFormat(impFormat);
+            System.out.println("result before setImpDoc " + result);
+            anImport.setImpDoc(result);
+            anImport.setImpDate(dateWhen);
+            anImport.setUser(username);
+            importID = (Long) session.save(anImport);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            try {
+                session.close();
+            } catch (HibernateException e) {
+                e.printStackTrace();
+            }
+        }
+        return importID;
+    }
+
+    private String importDataInXML(String tableIn) {
+        String result = "invlid XML";
+        //TODO: сделать импорт из XML
+        return result;
+    }
+
+    private String importDataInJSON(String tableIn) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        Gson gson = new Gson();
+        String result = "invalid json";
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\inout\\import\\json\\" + tableIn + ".json"))) {
+            Trns trns = gson.fromJson(br, Trns.class);
+            result = gson.toJson(trns);
+
+            List<Trn> trnList = trns.getListOfTrn();
+            System.out.println(trnList);
+
+            tx = session.beginTransaction();
+
+            String sql = "insert into TRN values (:id,:dognum,:dateSuccess,:accDeb," +
+                    ":curDeb,:accCred,:curCred,:sumDeb,:sumCred)";
+            SQLQuery query = session.createSQLQuery(sql);
+
+            for (Trn item : trnList) {
+                query.setParameter("id", item.getId());
+                query.setParameter("dognum", item.getDognum());
+                query.setParameter("dateSuccess", item.getDateSuccess());
+                query.setParameter("accDeb", item.getAccDeb());
+                query.setParameter("curDeb", item.getCurDeb());
+                query.setParameter("accCred", item.getAccCred());
+                query.setParameter("curCred", item.getCurCred());
+                query.setParameter("sumDeb", item.getSumDeb());
+                query.setParameter("sumCred", item.getSumCred());
+                query.executeUpdate();
+            }
+            System.out.println("before commit;");
+            tx.commit();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                System.out.println("hiberException");
+                e.printStackTrace();
+                tx.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        System.out.println("result before quit json " + result);
+        return result;
+    }
+
+    private String importDataInCSV(String tableIn) {
+        String result = "invalid Csv";
+        //TODO: сделать импорт из CSV
+        return result;
+    }
+
+    private void initImportComponents(ImportExportModel importExportModel) {
+
+        ToggleGroup group = ImportExportSwingFrame.getGroupOutFormat();
+
+        if (group.getSelectedToggle() != null) {
+            importExportModel.outFormat = ((RadioButton) group.
+                    getSelectedToggle()).
+                    getText();
+        }
+
+        ComboBox<String> comboBox = ImportExportSwingFrame.getInTableComboBox();
+
+        importExportModel.tableIn = comboBox.getValue();
     }
 }

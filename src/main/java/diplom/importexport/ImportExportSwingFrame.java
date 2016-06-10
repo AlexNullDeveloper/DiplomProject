@@ -32,9 +32,10 @@ public class ImportExportSwingFrame extends JFrame{
     private static BorderPane borderPane;
     private static final int APPLICATION_HEIGHT = 458;
     private static final int APPLICATION_WIDTH = 550;
+    private static ComboBox inTableComboBox;
+    private static ToggleGroup groupOutFormat;
     private int topPointY;
     private int leftPointX;
-
     private static ComboBox fromTableComboBox;
     private static Button exitButton;
 
@@ -49,6 +50,12 @@ public class ImportExportSwingFrame extends JFrame{
         return groupInFormat;
     }
 
+    public static ComboBox getInTableComboBox() {
+        return inTableComboBox;
+    }
+    public static ToggleGroup getGroupOutFormat() {
+        return groupOutFormat;
+    }
 
     public static BorderPane getBorderPane(){
         return borderPane;
@@ -161,7 +168,7 @@ public class ImportExportSwingFrame extends JFrame{
         Label fromFormatLabel =  new Label("Из формата");
         GridPane.setConstraints(fromFormatLabel,1,0);
 
-        ToggleGroup groupOutFormat = new ToggleGroup();
+        groupOutFormat = new ToggleGroup();
 
         RadioButton buttonFromJson = new RadioButton("JSON");
         buttonFromJson.setToggleGroup(groupOutFormat);
@@ -180,7 +187,7 @@ public class ImportExportSwingFrame extends JFrame{
         GridPane.setConstraints(inTableLabel,1,4);
 
         ObservableList<String> InTableList = FXCollections.observableArrayList("TRN","ACC","CUS");
-        ComboBox<String> inTableComboBox = new ComboBox<>(InTableList);
+        inTableComboBox = new ComboBox<>(InTableList);
         inTableComboBox.getSelectionModel().select("TRN");
         GridPane.setConstraints(inTableComboBox,1,5);
 

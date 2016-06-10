@@ -4,10 +4,11 @@ import javax.persistence.*;
 import java.sql.Date;
 
 /**
- * Created by a.talismanov on 03.06.2016.
+ * @author a.talismanov
+ * @version on 03.06.2016.
  */
 @Entity
-@Table(name="EXPORT")
+@Table(name = "EXPORT")
 public class Export {
     @Id @Column(name = "EXP_ID")
     @GeneratedValue(generator="my_seq")

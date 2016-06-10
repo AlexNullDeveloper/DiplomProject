@@ -11,11 +11,19 @@ import java.sql.Date;
 @Entity
 @Table(name = "TRN")
 public class Trn {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Id @Column(name = "id")
     @GeneratedValue(generator="my_seq")
     @SequenceGenerator(name="my_seq", sequenceName = "TRN_SEQ",allocationSize = 1)
-    private BigInteger id;
-
+    //private BigInteger id;
+    private long id;
     @Column(name = "dognum")
     private int dognum;
 
@@ -111,13 +119,13 @@ public class Trn {
         this.dateSuccess = dateSuccess;
     }
 
-    public BigInteger getId() {
-        return id;
-    }
-
-    public void setId(BigInteger id) {
-        this.id = id;
-    }
+//    public BigInteger getId() {
+//        return id;
+//    }
+//
+//    public void setId(BigInteger id) {
+//        this.id = id;
+//    }
 
     public int getDognum() {
         return dognum;

@@ -33,6 +33,8 @@
         <mapping class="diplom.catalogs.Customer"/>
         <mapping class="diplom.catalogs.AdressJpa"/>
         <mapping class="diplom.catalogs.accounts.Acc"/>
+        <mapping class="diplom.importexport.Import"/>
+        <mapping class="diplom.importexport.Export"/>
 
     </session-factory>
 </hibernate-configuration>
