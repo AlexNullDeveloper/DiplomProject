@@ -29,6 +29,13 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- JUNIT-->
         <dependency>
              <groupId>junit</groupId>
@@ -58,11 +65,11 @@
         </dependency>
 
         <!-- http://mvnrepository.com/artifact/xerces/xerces -->
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xerces</artifactId>
-            <version>2.4.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>xerces</groupId>-->
+            <!--<artifactId>xerces</artifactId>-->
+            <!--<version>2.4.0</version>-->
+        <!--</dependency>-->
 
 
         <!-- http://mvnrepository.com/artifact/cglib/cglib -->
@@ -125,6 +132,8 @@
             <artifactId>xom</artifactId>
             <version>1.2.10</version>
         </dependency>
+
+
 
 
     </dependencies>

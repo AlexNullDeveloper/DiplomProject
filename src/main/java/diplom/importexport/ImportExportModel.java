@@ -23,6 +23,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -515,21 +519,58 @@ class ImportExportModel {
 
     private String importDataInXML(String tableIn) {
         String result = "invlid XML";
-
+        Session session = factory.openSession();
+        Transaction tx = null;
         try {
             JAXBContext jc = JAXBContext.newInstance(Trns.class);
             Unmarshaller u = jc.createUnmarshaller();
             FileReader reader = new FileReader("C:\\inout\\import\\xml\\TRN.xml");
             Trns transactions = (Trns) u.unmarshal(reader);
             System.out.println(transactions);
+            tx = session.beginTransaction();
+            String sql = "insert into TRN values (:id,:dognum,:dateSuccess,:accDeb," +
+                    ":curDeb,:accCred,:curCred,:sumDeb,:sumCred)";
+            SQLQuery query = session.createSQLQuery(sql);
+            for (Trn item : transactions.getListOfTrn()){
+//                session.save(item);
+                query.setParameter("id", item.getId());
+                query.setParameter("dognum", item.getDognum());
+                query.setParameter("dateSuccess", item.getDateSuccess());
+                query.setParameter("accDeb", item.getAccDeb());
+                query.setParameter("curDeb", item.getCurDeb());
+                query.setParameter("accCred", item.getAccCred());
+                query.setParameter("curCred", item.getCurCred());
+                query.setParameter("sumDeb", item.getSumDeb());
+                query.setParameter("sumCred", item.getSumCred());
+                query.executeUpdate();
+            }
+            tx.commit();
+            System.out.println("after commit;");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (JAXBException e) {
             e.printStackTrace();
+        } catch (HibernateException e){
+            if (tx != null) tx.rollback();
+        } finally {
+            session.close();
         }
 
+        Path path = Paths.get("C:\\inout\\import\\xml","TRN.xml");
+        List<String> lines = null;
+        try {
+            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines){
+            sb.append(line);
+        }
+
+
         //TODO: сделать импорт из XML
-        return result;
+        return sb.toString();
     }
 
     private String importDataInJSON(String tableIn) {
@@ -542,7 +583,7 @@ class ImportExportModel {
             result = gson.toJson(trns);
 
             List<Trn> trnList = trns.getListOfTrn();
-            System.out.println(trnList);
+            //System.out.println(trnList);
 
             tx = session.beginTransaction();
 
@@ -562,7 +603,7 @@ class ImportExportModel {
                 query.setParameter("sumCred", item.getSumCred());
                 query.executeUpdate();
             }
-            System.out.println("before commit;");
+         //   System.out.println("before commit;");
             tx.commit();
 
         } catch (IOException e) {
