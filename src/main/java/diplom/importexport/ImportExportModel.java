@@ -22,6 +22,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,6 +30,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -383,7 +386,7 @@ class ImportExportModel {
         } catch (HibernateException e) {
             e.printStackTrace();
         }
-        
+
         Path path = Paths.get("C:\\inout\\export\\csv","TRN.csv");
         List<String> lines = null;
         try {
@@ -590,8 +593,6 @@ class ImportExportModel {
             sb.append(line);
         }
 
-
-        //TODO: сделать импорт из XML
         return sb.toString();
     }
 
@@ -644,7 +645,60 @@ class ImportExportModel {
     }
 
     private String importDataInCSV(String tableIn) {
+        Session session = factory.openSession();
+        Transaction tx = null;
         String result = "invalid Csv";
+        String currentLine;
+        String[] arrOfStr;
+        StringBuilder sb = new StringBuilder();
+        try(BufferedReader br = new BufferedReader(new FileReader("C:\\inout\\import\\csv\\TRN.csv"))){
+            tx = session.beginTransaction();
+
+            String sql = "insert into TRN values (:id,:dognum,:dateSuccess,:accDeb," +
+                    ":curDeb,:accCred,:curCred,:sumDeb,:sumCred)";
+            SQLQuery query = session.createSQLQuery(sql);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            while ((currentLine = br.readLine()) != null){
+                arrOfStr = currentLine.split(";");
+//                for (int i = 0; i < arrOfStr.length;i++){
+//                    System.out.println("arrOfStr[" + i + "]" + arrOfStr[i]);
+                    query.setParameter("id", Long.parseLong(arrOfStr[0]));
+                    query.setParameter("dognum", Integer.parseInt(arrOfStr[1]));
+                    java.util.Date date = null;
+                    try {
+                        date = simpleDateFormat.parse(arrOfStr[2]);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    query.setParameter("dateSuccess", new java.sql.Date(date.getTime()));
+                    query.setParameter("accDeb", arrOfStr[3]);
+                    query.setParameter("curDeb", arrOfStr[4]);
+                    query.setParameter("accCred", arrOfStr[5]);
+                    query.setParameter("curCred", arrOfStr[6]);
+                    query.setParameter("sumDeb", new BigDecimal(arrOfStr[7]));
+                    query.setParameter("sumCred", new BigDecimal(arrOfStr[8]));
+                    query.executeUpdate();
+//                }
+
+                sb.append(currentLine);
+//                if (!tx.wasCommitted())
+
+            }
+            tx.commit();
+            result = sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HibernateException e){
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
         //TODO: сделать импорт из CSV
         return result;
     }
