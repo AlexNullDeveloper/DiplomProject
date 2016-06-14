@@ -339,36 +339,37 @@ class ImportExportModel {
                     writer.append(';');
 
                     writer.newLine();
+//                    writer.flush();
                 }
-                sw = new StringWriter();
-                writer = new BufferedWriter(sw);
-                for (Trn trn : results) {
-//                    writer.write(( trn.getId()).toString());
-                    //for long
-                    writer.write(String.valueOf((trn.getId())));
-                    writer.append(';');
-                    writer.write(((Integer) trn.getDognum()).toString());
-                    writer.append(';');
-                    writer.write(trn.getDateSuccess().toString());
-                    writer.append(';');
-                    writer.append(trn.getAccDeb());
-                    writer.append(';');
-                    writer.append(trn.getCurDeb());
-                    writer.append(';');
-                    writer.append(trn.getAccCred());
-                    writer.append(';');
-                    writer.append(trn.getCurCred());
-                    writer.append(';');
-                    writer.append(trn.getSumDeb().toString());
-                    writer.append(';');
-                    writer.append(trn.getSumCred().toString());
-                    writer.append(';');
+//                writer.close();
 
-                    writer.newLine();
-                }
-                writer.flush();
-                StringBuffer sb = sw.getBuffer();
-                resultCSV = sb.toString();
+//                sw = new StringWriter();
+//                writer = new BufferedWriter(sw);
+//                for (Trn trn : results) {
+////                    writer.write(( trn.getId()).toString());
+//                    //for long
+//                    writer.write(String.valueOf((trn.getId())));
+//                    writer.append(';');
+//                    writer.write(((Integer) trn.getDognum()).toString());
+//                    writer.append(';');
+//                    writer.write(trn.getDateSuccess().toString());
+//                    writer.append(';');
+//                    writer.append(trn.getAccDeb());
+//                    writer.append(';');
+//                    writer.append(trn.getCurDeb());
+//                    writer.append(';');
+//                    writer.append(trn.getAccCred());
+//                    writer.append(';');
+//                    writer.append(trn.getCurCred());
+//                    writer.append(';');
+//                    writer.append(trn.getSumDeb().toString());
+//                    writer.append(';');
+//                    writer.append(trn.getSumCred().toString());
+//                    writer.append(';');
+//
+//                    writer.newLine();
+//                }
+
 
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -382,6 +383,27 @@ class ImportExportModel {
         } catch (HibernateException e) {
             e.printStackTrace();
         }
+        
+        Path path = Paths.get("C:\\inout\\export\\csv","TRN.csv");
+        List<String> lines = null;
+        try {
+            lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines){
+            sb.append(line + "\n");
+        }
+
+
+//                writer.flush();
+//                writer.close();
+//                StringBuffer sb = sw.getBuffer();
+        resultCSV = sb.toString();
+        System.out.println(resultCSV);
+
+
         return resultCSV;
     }
 
