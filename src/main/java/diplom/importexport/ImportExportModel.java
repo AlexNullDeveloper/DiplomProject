@@ -1,8 +1,6 @@
 package diplom.importexport;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -23,7 +21,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +33,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by a.talismanov on 03.06.2016.
+ * @author a.talismanov
+ * @version on 03.06.2016.
  */
 class ImportExportModel {
     private static SessionFactory factory;
@@ -72,10 +70,6 @@ class ImportExportModel {
 
         importExportModel.getUserName();
 
-//        System.out.println(importExportModel.tableFrom);
-//        System.out.println(importExportModel.inFormat);
-//        System.out.println(importExportModel.dateWhen);
-
         String result = "invalid string";
         if (importExportModel.inFormat.equals("CSV")) {
             result = exportDataInCSV(importExportModel.tableFrom);
@@ -102,10 +96,8 @@ class ImportExportModel {
             final String exportPath = "C:\\inout\\export\\xml";
             File exportImportDir = new File(exportPath);
             if (!exportImportDir.exists()) {
-//                System.out.println("creating " + exportPath);
 
                 boolean result = false;
-
                 try {
                     exportImportDir.mkdirs();
                     result = true;
@@ -146,8 +138,6 @@ class ImportExportModel {
                     String idStr = "id";
                     Element elementId = document.createElement(idStr);
                     elementTransaction.appendChild(elementId);
-//                    elementId.appendChild(document.createTextNode(trn.getId().toString()));
-                    //long
                     elementId.appendChild(document.createTextNode(String.valueOf(trn.getId())));
 
                     String dognumStr = "dognum";
@@ -180,7 +170,7 @@ class ImportExportModel {
                     String curCredStr = "curCred";
                     Element elementCurCred = document.createElement(curCredStr);
                     elementTransaction.appendChild(elementCurCred);
-                    elementCurCred.appendChild(document.createTextNode(trn.getCurCred().toString()));
+                    elementCurCred.appendChild(document.createTextNode(trn.getCurCred()));
 
                     String sumDebStr = "sumDeb";
                     Element elementSumDeb = document.createElement(sumDebStr);
@@ -316,12 +306,10 @@ class ImportExportModel {
 
 
             BufferedWriter writer = null;
-            StringWriter sw = null;
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(exportCSV + "\\" + tableFrom + ".csv"), "utf-8"));
                 for (Trn trn : results) {
-//                    writer.write(( trn.getId()).toString());
                     writer.write(String.valueOf(trn.getId()));
                     writer.append(';');
                     writer.write(((Integer) trn.getDognum()).toString());
@@ -342,38 +330,7 @@ class ImportExportModel {
                     writer.append(';');
 
                     writer.newLine();
-//                    writer.flush();
                 }
-//                writer.close();
-
-//                sw = new StringWriter();
-//                writer = new BufferedWriter(sw);
-//                for (Trn trn : results) {
-////                    writer.write(( trn.getId()).toString());
-//                    //for long
-//                    writer.write(String.valueOf((trn.getId())));
-//                    writer.append(';');
-//                    writer.write(((Integer) trn.getDognum()).toString());
-//                    writer.append(';');
-//                    writer.write(trn.getDateSuccess().toString());
-//                    writer.append(';');
-//                    writer.append(trn.getAccDeb());
-//                    writer.append(';');
-//                    writer.append(trn.getCurDeb());
-//                    writer.append(';');
-//                    writer.append(trn.getAccCred());
-//                    writer.append(';');
-//                    writer.append(trn.getCurCred());
-//                    writer.append(';');
-//                    writer.append(trn.getSumDeb().toString());
-//                    writer.append(';');
-//                    writer.append(trn.getSumCred().toString());
-//                    writer.append(';');
-//
-//                    writer.newLine();
-//                }
-
-
             } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
@@ -399,10 +356,6 @@ class ImportExportModel {
             sb.append(line + "\n");
         }
 
-
-//                writer.flush();
-//                writer.close();
-//                StringBuffer sb = sw.getBuffer();
         resultCSV = sb.toString();
         System.out.println(resultCSV);
 
@@ -661,31 +614,27 @@ class ImportExportModel {
 
             while ((currentLine = br.readLine()) != null){
                 arrOfStr = currentLine.split(";");
-//                for (int i = 0; i < arrOfStr.length;i++){
-//                    System.out.println("arrOfStr[" + i + "]" + arrOfStr[i]);
-                    query.setParameter("id", Long.parseLong(arrOfStr[0]));
-                    query.setParameter("dognum", Integer.parseInt(arrOfStr[1]));
-                    java.util.Date date = null;
-                    try {
-                        date = simpleDateFormat.parse(arrOfStr[2]);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                query.setParameter("id", Long.parseLong(arrOfStr[0]));
+                query.setParameter("dognum", Integer.parseInt(arrOfStr[1]));
+                java.util.Date date = null;
+                try {
+                    date = simpleDateFormat.parse(arrOfStr[2]);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
-                    query.setParameter("dateSuccess", new java.sql.Date(date.getTime()));
-                    query.setParameter("accDeb", arrOfStr[3]);
-                    query.setParameter("curDeb", arrOfStr[4]);
-                    query.setParameter("accCred", arrOfStr[5]);
-                    query.setParameter("curCred", arrOfStr[6]);
-                    query.setParameter("sumDeb", new BigDecimal(arrOfStr[7]));
-                    query.setParameter("sumCred", new BigDecimal(arrOfStr[8]));
-                    query.executeUpdate();
-//                }
+                query.setParameter("dateSuccess", new java.sql.Date(date.getTime()));
+                query.setParameter("accDeb", arrOfStr[3]);
+                query.setParameter("curDeb", arrOfStr[4]);
+                query.setParameter("accCred", arrOfStr[5]);
+                query.setParameter("curCred", arrOfStr[6]);
+                query.setParameter("sumDeb", new BigDecimal(arrOfStr[7]));
+                query.setParameter("sumCred", new BigDecimal(arrOfStr[8]));
+                query.executeUpdate();
 
                 sb.append(currentLine);
-//                if (!tx.wasCommitted())
-
             }
+
             tx.commit();
             result = sb.toString();
         } catch (FileNotFoundException e) {
@@ -699,7 +648,6 @@ class ImportExportModel {
             session.close();
         }
 
-        //TODO: сделать импорт из CSV
         return result;
     }
 
