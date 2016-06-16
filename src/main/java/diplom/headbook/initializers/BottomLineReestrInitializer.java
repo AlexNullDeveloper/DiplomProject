@@ -10,8 +10,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.text.Caret;
-import javax.swing.text.DefaultCaret;
 
 /**
  * Инициализация нижней части реестра документов

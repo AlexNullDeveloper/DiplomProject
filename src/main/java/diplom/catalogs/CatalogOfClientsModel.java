@@ -38,7 +38,6 @@ class CatalogOfClientsModel {
 
         List<BigInteger> result = (List<BigInteger>) query.list();
         ObservableList<BigInteger> clientIds = FXCollections.observableList(result);
-        //CatalogOfClients.setNumsOfClients(clientIds);
         CatalogOfClientsSwing.setNumsOfClients(clientIds);
     }
 
@@ -46,8 +45,6 @@ class CatalogOfClientsModel {
         Session session = factory.openSession();
         String hql = "FROM diplom.catalogs.Customer C where C.cusId = :customer_id";
         Query query = session.createQuery(hql);
-
-        // BigInteger cusId = getIntFromBigInteger(selectedId);
 
         Customer resultCustomer = null;
 

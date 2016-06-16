@@ -50,7 +50,7 @@ public class SettingsFrame extends JFrame{
         isTestingRegistration = new JCheckBox("Тестирование регистрации клиентов");
         isTestingRegistration.setMnemonic(KeyEvent.VK_N);
         isTestingRegistration.setSelected(true);
-        JCheckBox someOtherOption = new JCheckBox("Другая опция");
+        JCheckBox someOtherOption = new JCheckBox("Тестирование заведения клиентов");
 
 
         panel.add(isTestingRegistration);
@@ -58,7 +58,6 @@ public class SettingsFrame extends JFrame{
     }
 
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         SettingsFrame sf = new SettingsFrame("Настройки");
     }
 

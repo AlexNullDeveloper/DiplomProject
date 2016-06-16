@@ -12,9 +12,6 @@ import java.util.Locale;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-
-//import com.talismanov.OCA_808_Java.MessageDialogs;
-//import com.talismanov.frames.ErrorForm;
 import diplom.mainWindow.MainFrame;
 import diplom.util.ConnectionSingleton;
 import org.hibernate.cfg.Configuration;

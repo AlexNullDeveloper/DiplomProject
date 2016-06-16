@@ -14,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -891,14 +889,8 @@ public class RegPlatDocumentsInNationalCurrency extends JFrame{
     private static void initTopSide() {
         JPanel JPanelTop = new JPanel();
         JPanelTop.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JPanelTop.add(new JButton("1"));
-        JPanelTop.add(new JButton("2"));
-        JPanelTop.add(new JButton("3"));
-        JPanelTop.add(new JButton("4"));
-        JPanelTop.add(new JButton("5"));
-        JPanelTop.add(new JButton("6"));
-        JPanelTop.add(new JButton("7"));
-        JPanelTop.add(new JButton("8"));
+        JPanelTop.add(new JButton("Справочник"));
+
 
         JPanelTop.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(Color.GRAY, 1, true),
@@ -916,23 +908,6 @@ public class RegPlatDocumentsInNationalCurrency extends JFrame{
         JPanelBottomLeft.add(buttonReg);
         buttonNaKart = new JButton("На картотеку");
         JPanelBottomLeft.add(buttonNaKart);
-
-//  для лабораторной работы по Юзабилити
-//        buttonNaKart.addActionListener(ae -> {
-//            int h = buttonExit.getHeight();
-//            int w = buttonExit.getWidth();
-//            if (usabilityCounter == 32){
-//                buttonExit.setSize(w+1,h+1);
-//            } else if(usabilityCounter == 40){
-//                buttonExit.setSize(w+3,h+3);
-//            }
-//            if (usabilityCounter > 40 && usabilityCounter <= 50 & usabilityCounter % 3 == 0){
-//                buttonExit.setSize(w+4,h+4);
-//            }
-//            usabilityCounter++;
-//
-//
-//        });
 
         JPanelBottomLeft.add(new JButton("Отложить"));
 

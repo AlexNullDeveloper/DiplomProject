@@ -8,7 +8,6 @@ import java.util.ArrayList;
  */
 @XmlRootElement(name = "transactions")
 @XmlAccessorType(XmlAccessType.FIELD)
-//@XmlType(name = "transactions")
 public class Trns {
 
     @XmlElement(name = "transaction")

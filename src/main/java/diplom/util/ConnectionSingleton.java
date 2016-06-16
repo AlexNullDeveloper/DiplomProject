@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
 
 
 public class ConnectionSingleton {
@@ -37,7 +36,6 @@ public class ConnectionSingleton {
                     } catch (SQLException e) {
                         // TODO Auto-generated catch block
                         System.out.println("Connection getInstance Exception");
-                        //e.printStackTrace();
                     }
                 }
             }

@@ -39,7 +39,6 @@ public class ImportExportSwingFrame extends JFrame{
     private static ComboBox fromTableComboBox;
     private static Button exitButton;
 
-    //private static JFXPanel dummyPanel;
 
     static ComboBox getFromTableComboBox() {
         return fromTableComboBox;
@@ -72,8 +71,6 @@ public class ImportExportSwingFrame extends JFrame{
         topPointY = (screen.height - APPLICATION_HEIGHT) / 2;
         leftPointX = (screen.width - APPLICATION_WIDTH) / 2;
         setBounds(leftPointX,topPointY,APPLICATION_WIDTH,APPLICATION_HEIGHT);
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       // dummyPanel = new JFXPanel();
         setVisible(true);
 
         Platform.runLater(() -> initFX(fxPanel));
@@ -194,7 +191,7 @@ public class ImportExportSwingFrame extends JFrame{
         Button selectPathButton = new Button("Выбрать папку или файл");
         GridPane.setConstraints(selectPathButton,0,6);
 
-        TextField selectedPath = new TextField("C:\\ProgramFiles\\Import");
+        TextField selectedPath = new TextField("C:\\inout\\");
         selectedPath.setPrefSize(300,selectedPath.getPrefHeight());
         GridPane.setConstraints(selectedPath,1,6);
 

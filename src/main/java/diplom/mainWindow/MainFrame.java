@@ -12,9 +12,7 @@ import javax.swing.*;
 import diplom.catalogs.CatalogOfClientsSwing;
 import diplom.catalogs.accounts.AccFrame;
 import diplom.catalogs.version.VersionFrame;
-import diplom.importexport.ImportExportFrame;
 import diplom.administration.SettingsFrame;
-import diplom.catalogs.CatalogOfClients;
 import diplom.helpMenu.AboutFrame;
 import diplom.importexport.ImportExportSwingFrame;
 import diplom.registration.platDocument.RegPlatDocumentsInNationalCurrency;
@@ -22,10 +20,6 @@ import diplom.headbook.presenter.ReestrDocumentsFrame;
 import diplom.moduleDate.ModuleDateFrame;
 import diplom.moduleDate.ModuleDateModel;
 import diplom.util.ConnectionSingleton;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.stage.Stage;
 
 /**
  * Основное меню приложения
@@ -49,7 +43,8 @@ public class MainFrame extends JFrame
 
     public MainFrame(String nameOfFrame, String nameOfDB)
     {
-        super("Бухгалтерия talismanoffTM (Пользователь " + nameOfFrame + " ) База " + nameOfDB);
+        //super("Бухгалтерия talismanoffTM (Пользователь " + nameOfFrame + " ) База " + nameOfDB);
+        super("JavABS. Бухгалтерия (Пользователь " + nameOfFrame + " ) База " + nameOfDB);
         setResizable(false);
         this.connection = ConnectionSingleton.getInstance();
 
@@ -192,7 +187,7 @@ public class MainFrame extends JFrame
         JMenuItem importMenuItem = new JMenuItem("Импорт/Экспорт данных");
         importMenu.add(importMenuItem);
 
-        importMenuItem.addActionListener( ae -> new ImportExportSwingFrame("импорт/кспорт данных"));
+        importMenuItem.addActionListener( ae -> new ImportExportSwingFrame("Импорт/экспорт данных"));
 
         return importMenu;
     }

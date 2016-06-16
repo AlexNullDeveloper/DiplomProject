@@ -31,7 +31,6 @@ public class ReestrDocumentModel {
             SQLe.printStackTrace();
         } catch (NullPointerException NullPointer){
             System.out.println("connection пустой, Тестовый режим");
-            //NullPointer.printStackTrace();
         }
         return rs;
     }

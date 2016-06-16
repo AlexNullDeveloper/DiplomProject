@@ -7,14 +7,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -27,10 +23,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -136,8 +128,6 @@ public class ReestrDocumentsFrame extends JFrame {
         //индекс первой колонки в которой номер документа
         final int DOG_NUM_INDEX = 0;
         final int DATE_SUCCESS_INDEX = 1;
-        //int selectedColumnIndex = jTableDocuments.getSelectedColumn();
-        //System.out.println(selectedColumnIndex);
 
         int selectedRowIndex = jTableDocuments.getSelectedRow();
         Integer selectedDocNum =  ((BigDecimal) jTableDocuments.getModel().getValueAt(selectedRowIndex, DOG_NUM_INDEX)).intValue();
@@ -163,7 +153,6 @@ public class ReestrDocumentsFrame extends JFrame {
 
     class DeleteDocumentListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            //TODO
             int result = JOptionPane.showOptionDialog(ReestrDocumentsFrame.this, "Вы точно хотите удалить документ?",
                     "Удаление документа", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Да", "Нет"}, "Да");
 
@@ -171,32 +160,18 @@ public class ReestrDocumentsFrame extends JFrame {
 
                 ReestrDocumentsModel reestrDocumentsModel = new ReestrDocumentsModel();
                 int selectedRowIndex = jTableDocuments.getSelectedRow();
-                //System.out.println(selectedRowIndex);
                 //индекс первой колонки в которой номер документа
                 final int DOG_NUM_INDEX = 0;
-                //int selectedColumnIndex = jTableDocuments.getSelectedColumn();
-                //System.out.println(selectedColumnIndex);
-                Integer selectedDogNum =  ((BigDecimal) jTableDocuments.getModel().getValueAt(selectedRowIndex, DOG_NUM_INDEX)).intValue();
+                Integer selectedDogNum =  ((BigDecimal) jTableDocuments.getModel().getValueAt(selectedRowIndex,
+                        DOG_NUM_INDEX)).intValue();
                 reestrDocumentsModel.deleteDocument(selectedDogNum);
 
-                //jTableDocuments.getModel();
                 tableModel.removeRow(selectedRowIndex);
 
                 jscrollPane.getVerticalScrollBar().setValue(0);
 
-                JOptionPane.showMessageDialog(ReestrDocumentsFrame.this, "Документ успешно удалён.","Документ удалён",JOptionPane.INFORMATION_MESSAGE);
-	    		/*
-	    		 * замена модели новым resultSetом
-	    		 */
-	    		/*
-	    		ResultSet rs = reestrDocumentsModel.getAllRecResultSet();
-	    		try {
-					setDataSource(rs);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				*/
+                JOptionPane.showMessageDialog(ReestrDocumentsFrame.this, "Документ успешно удалён.",
+                        "Документ удалён",JOptionPane.INFORMATION_MESSAGE);
                 jscrollPane.getVerticalScrollBar().setValue(0);
             }
 
@@ -210,34 +185,11 @@ public class ReestrDocumentsFrame extends JFrame {
             FindDocumentsFrame findDocumentsFrame = new FindDocumentsFrame("Поиск документа по параметрам", connect);
         }
     }
-//
-//    /**
-//     * получаем resultSet в данными из таблички TRN
-//     */
-//    public static ResultSet getResultSetFromTableTRN(){
-//        ResultSet rs = null;
-//        String selectDataTrnSQL = "SELECT DOGNUM, DATE_SUCCESS, ACC_DEB, CUR_DEB, ACC_CRED, CUR_CRED, SUM_DEB, SUM_CRED "
-//                + " FROM TRN "
-//                + " ORDER BY DOGNUM"
-//                ;
-//        PreparedStatement preparedStatement = null;
-//        try {
-//            preparedStatement = connect.prepareStatement(selectDataTrnSQL);
-//            rs = preparedStatement.executeQuery();
-//        } catch (SQLException SQLe){
-//            SQLe.printStackTrace();
-//        } catch (NullPointerException NullPointer){
-//            System.out.println("connection пустой, Тестовый режим");
-//            //NullPointer.printStackTrace();
-//        }
-//        return rs;
-//    }
     /**
      * делаем скролл для панели в него добавляем табличку
      */
 
     public static JScrollPane makeJScrollPane(){
-        //JTable jTableDocuments = null;
         ReestrDocumentModel reestrDocumentModel = new ReestrDocumentModel();
         ResultSet resultSet = reestrDocumentModel.getResultSetFromTableTRN();
 
@@ -248,7 +200,6 @@ public class ReestrDocumentsFrame extends JFrame {
                 tableModelTRN = buildTableModelTRN(resultSet);
             }
 
-            //jTableDocuments = new JTable(buildTableModelTRN(resultSet)){
             if (jTableDocuments == null) {
                 jTableDocuments = new JTable(tableModelTRN) {
                     @Override
@@ -259,12 +210,6 @@ public class ReestrDocumentsFrame extends JFrame {
                         tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
                         return component;
                     }
-
-                /* @Override
-                 public boolean isCellEditable(int row, int column) {
-                     //all cells false
-                     return false;
-                    }*/
                 };
             }
         } catch (SQLException SQLe){
@@ -355,8 +300,6 @@ public class ReestrDocumentsFrame extends JFrame {
             System.out.println("connection пустой, тестовый режим окна");
         }
 
-
-        //return new TRNTableModel(data,columnNames);
         tableModel = new DefaultTableModel(data,columnNames){
             /**
              *
@@ -382,40 +325,21 @@ public class ReestrDocumentsFrame extends JFrame {
     public void initTopLine(Container pane){
         //верхняя группа
         //buttonFindDocuments = new JButton(new ImageIcon("бинокль2.png"));
-        buttonFindDocuments = new JButton("Find");
+        buttonFindDocuments = new JButton("Найти");
         buttonFindDocuments.addActionListener(new FindButtonListener());
         //JButton second = new JButton(new ImageIcon("edit3.png"));
-        buttonEdit = new JButton("Edit");
-        buttonDelete = new JButton("Delete");
+        buttonEdit = new JButton("Редактировать");
+        buttonDelete = new JButton("Удалить");
         buttonDelete.addActionListener(new DeleteDocumentListener());
-        //JButton third = new JButton("3");
-        JButton fourth = new JButton("4");
-        JButton fifth = new JButton("5");
-        JButton sixth = new JButton("6");
-        JButton seventh = new JButton("7");
-
-        JTextField field1 = new JTextField("");
-        JTextField field2 = new JTextField("");
-        JTextField field3 = new JTextField("third field");
 
         x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,buttonFindDocuments,x);
         x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,buttonEdit,x);
         x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,buttonDelete,x);
-        //x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,third,x);
-        x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,fourth,x);
-        x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,fifth,x);
-        x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,sixth,x);
-        x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,seventh,x);
-        x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,field1,x);
-        x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,field2,x);
-        x = TopLineButtonAndFieldsInitializer.addNextComponentInLine(pane,field3,x);
 
-        /*
-         * обнуляем x для следующего использования
-         * */
+       //На будущее, сейчас нет необходимости
 
+        //обнуляем x для следующего использования
         x = 0;
-
     }
 
     /**
@@ -512,8 +436,6 @@ public class ReestrDocumentsFrame extends JFrame {
             }
             synchronized (data) {
                 data.add(row);
-                // сообщаем о прибавлении строки
-                //tableModelTRN.fireTableRowsInserted(data.size()-1, data.size()-1);
             }
         }
 
@@ -538,13 +460,6 @@ public class ReestrDocumentsFrame extends JFrame {
 
         };
 
-        /*jscrollPane = new JScrollPane(jTableDocuments, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER){
-			@Override
-            public boolean isVisible(){
-                return true;
-            }
-
-        };*/
 
         pane.add(jscrollPane);
 
@@ -567,11 +482,6 @@ public class ReestrDocumentsFrame extends JFrame {
         jscrollPane.setVisible(true);
         //jTableDocuments.updateUI();
     }
-
-    /*public interface TableModelListener extends EventListener {
-        public void tableChanged(TableModelEvent e);
-    }
-    */
 
     public static void main(String[] args){
         ReestrDocumentsFrame reestrDocumentsFrame = new ReestrDocumentsFrame("Реестр документопроводок",connect);

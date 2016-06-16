@@ -1,7 +1,6 @@
 package diplom.importexport;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.sql.Date;
 
 /**
@@ -41,14 +40,6 @@ public class Import {
     public void setId(long id) {
         this.id = id;
     }
-
-//    public BigInteger getId() {
-//        return id;
-//    }
-//
-//    public void setId(BigInteger id) {
-//        this.id = id;
-//    }
 
     public String getTableTo() {
         return tableTo;

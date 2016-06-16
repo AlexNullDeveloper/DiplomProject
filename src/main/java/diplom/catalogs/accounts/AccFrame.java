@@ -91,12 +91,7 @@ public class AccFrame extends JFrame {
         exitButton = new Button("Выход");
         exitButton.setOnAction(ae -> this.setVisible(false));
         Platform.runLater(() -> initFX(fxPanel));
-//        Thread thread = new Runnable(){
-//            @Override
-//            public void run(){
-//
-//            }
-//        };
+
         Thread thread = new Thread(() -> {
             try {
                 Thread.sleep(5000);
@@ -203,17 +198,6 @@ public class AccFrame extends JFrame {
         });
         selectedId = tableOfAccIds.getSelectionModel().getSelectedItem().getAccId();
 
-//        //Add change listener
-//        tableOfNumsOfClients.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-//            //Check whether item is selected and set value of selected item to Label
-//            if (tableOfNumsOfClients.getSelectionModel().getSelectedItem() != null) {
-//                selectedId = BigInteger.valueOf(newValue.getCusIdProp());
-////                Customer currentCustomer = catalogOfClientsModel.getCustomerDetailsFromDB(selectedId);
-////                fillFieldsWithAccData(currentCustomer);
-//                setEditMode(false);
-//            }
-//        });
-//        selectedId = tableOfNumsOfClients.getSelectionModel().getSelectedItem().getCusId();
     }
 
     private TableView<CategoryGroup> initCenterBorderPane(BorderPane borderPane, BorderPane centralBorderPane) {
@@ -320,14 +304,6 @@ public class AccFrame extends JFrame {
                     otdTextField.getText(), userRegTextField.getText(), dateZavTextField.getText(),
                     userEditTextField.getText(), dateEditTextField.getText(), currentOstTextField.getText(), selectedId
             );
-//            CatalogOfClientsModel catalogOfClientsModel = new CatalogOfClientsModel();
-//            catalogOfClientsModel.updateClientDetails(dateEditTextField.getText(), fullNameTextField.getText(),
-//                    engNameTextField.getText(), shortNameTextField.getText(), ogrnTextField.getText(),
-//                    regOrgTextField.getText(), passportTextField.getText(), dateRegTextField.getText(),
-//                    placeRegTextField.getText(), innTextField.getText(), kppTextField.getText(),
-//                    numSvidTextField.getText(), nalInspTextField.getText(), emailTextField.getText(),
-//                    userRegTextField.getText(), dateZavTextField.getText(), userEditTextField.getText()
-//            );
         }
     }
 

@@ -1,12 +1,9 @@
 package diplom.importexport;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.Date;
 
 /**
@@ -27,8 +24,7 @@ public class Trn {
     @Id @Column(name = "id")
     @GeneratedValue(generator="my_seq")
     @SequenceGenerator(name="my_seq", sequenceName = "TRN_SEQ",allocationSize = 1)
-    //private BigInteger id;
-//    @XmlID
+
     private long id;
     @Column(name = "dognum")
     private int dognum;
@@ -56,23 +52,11 @@ public class Trn {
 
     public Trn() {}
 
-//    public Trn(int dognum, Date dateSuccess, String accDeb, String accCred, String curCred, String curDeb,
-//               BigDecimal sumDeb, BigDecimal sumCred) {
-//        this.dognum = dognum;
-//        this.dateSuccess = dateSuccess;
-//        this.accDeb = accDeb;
-//        this.curDeb = curDeb;
-//        this.accCred = accCred;
-//        this.curCred = curCred;
-//        this.sumDeb = sumDeb;
-//        this.sumCred = sumCred;
-//
-//    }
 
     public BigDecimal getSumCred() {
         return sumCred;
     }
-   // @XmlElement
+
     public void setSumCred(BigDecimal sumCred) {
         this.sumCred = sumCred;
     }
@@ -80,7 +64,7 @@ public class Trn {
     public BigDecimal getSumDeb() {
         return sumDeb;
     }
- //   @XmlElement
+
     public void setSumDeb(BigDecimal sumDeb) {
         this.sumDeb = sumDeb;
     }
@@ -88,7 +72,7 @@ public class Trn {
     public String getCurCred() {
         return curCred;
     }
- //   @XmlElement
+
     public void setCurCred(String curCred) {
         this.curCred = curCred;
     }
@@ -96,7 +80,7 @@ public class Trn {
     public String getAccCred() {
         return accCred;
     }
- //   @XmlElement
+
     public void setAccCred(String accCred) {
         this.accCred = accCred;
     }
@@ -104,7 +88,7 @@ public class Trn {
     public String getCurDeb() {
         return curDeb;
     }
- //   @XmlElement
+
     public void setCurDeb(String curDeb) {
         this.curDeb = curDeb;
     }
@@ -112,7 +96,7 @@ public class Trn {
     public String getAccDeb() {
         return accDeb;
     }
- //   @XmlElement
+
     public void setAccDeb(String accDeb) {
         this.accDeb = accDeb;
     }
@@ -120,23 +104,16 @@ public class Trn {
     public Date getDateSuccess() {
         return dateSuccess;
     }
-  //  @XmlElement
+
     public void setDateSuccess(Date dateSuccess) {
         this.dateSuccess = dateSuccess;
     }
 
-//    public BigInteger getId() {
-//        return id;
-//    }
-//
-//    public void setId(BigInteger id) {
-//        this.id = id;
-//    }
 
     public int getDognum() {
         return dognum;
     }
-   // @XmlElement
+
     public void setDognum(int dognum) {
         this.dognum = dognum;
     }

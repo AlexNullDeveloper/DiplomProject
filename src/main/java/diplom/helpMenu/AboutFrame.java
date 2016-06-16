@@ -1,8 +1,5 @@
 package diplom.helpMenu;
 
-/**
- * Created by a.talismanov on 28.04.2016.
- */
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;

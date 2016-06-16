@@ -80,11 +80,10 @@ public class CatalogOfClientsSwing extends JFrame {
     private int topPointY;
     private int leftPointX;
 
-//    static JFXPanel dummyJFXpanel;
     public CatalogOfClientsSwing(String str){
         super(str);
         JFXPanel fxPanel = new JFXPanel();
-//        dummyJFXpanel = new JFXPanel();
+
         add(fxPanel);
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -122,8 +121,6 @@ public class CatalogOfClientsSwing extends JFrame {
             }
         });
 
-        topFlowPane.getChildren().add(new Button("3"));
-        topFlowPane.getChildren().add(new Button("4"));
         final String cssDefault = "-fx-border-color: grey;\n"
                 + "-fx-border-width: 1;\n";
 
